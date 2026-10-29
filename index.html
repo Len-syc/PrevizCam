@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F7F5F0">
+<title>PrevizCam · 镜头预演</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23736B85'/%3E%3Cg fill='none' stroke='%23F7F5F0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 11h10v10H8z'/%3E%3Cpath d='M18 15l7-4v10l-7-4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="preview/style.css"><script type="importmap">{"imports":{"three":"./vendor/three.module.js","three-mesh-bvh":"./vendor/libs/three-mesh-bvh.module.js"}}</script>
+</head>
+<body>
+<header class="app-header">
+  <details class="menu brand-menu"><summary aria-label="项目菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z"/><path d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></svg><span>项目</span><svg class="menu-caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg></summary><div class="menu-items"><button id="new-project"><strong>新建项目</strong></button><button id="import-model">导入 GLB 模型</button><button id="import-script">导入剧本 JSON</button><button id="import-project">打开预演项目文件</button><button id="save-project">下载预演项目</button><div class="menu-divider"></div><span class="menu-section">本机项目</span><div id="menu-projects" class="menu-projects"></div><div class="menu-divider"></div><button id="load-demo">加载示例</button><a href="editor.html" target="_blank" rel="noopener">高级建模 ↗</a></div></details>
+  <div class="project-heading"><span class="eyebrow">Project</span><strong id="project-name">未打开项目</strong></div>
+  <div class="header-actions"><span id="save-state" class="save-state" role="status">正在打开</span>
+    <button id="undo" class="icon-button" title="撤销 Ctrl+Z" aria-label="撤销"><svg viewBox="0 0 24 24"><path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 1 1 0 8h-1"/></svg></button>
+    <button id="redo" class="icon-button" title="重做 Ctrl+Shift+Z" aria-label="重做"><svg viewBox="0 0 24 24"><path d="M15 14l4 -4l-4 -4"/><path d="M19 10h-11a4 4 0 1 0 0 8h1"/></svg></button>
+    <button id="open-export"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>导出</button>
+    <button id="open-ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 6 6a6 6 0 0 1 6 6z"/></svg>AI 镜头方案</button>
+    <button id="open-agent" class="button-accent" title="连接外部 Agent，预览并应用候选方案">Agent模式 <span id="agent-count" class="agent-count"></span></button>
+  </div>
+</header>
+<main class="workspace" id="workspace">
+  <aside class="sidebar">
+    <nav class="tabs" aria-label="资源列表"><button id="tab-shots" class="active" aria-pressed="true">剧本镜头 <span id="shot-count">03</span></button><button id="tab-scene" aria-pressed="false">场景</button></nav>
+    <div id="shots-pane" class="resource-pane"><div class="pane-caption"><span>寺门报喜 → 同场接话</span><button id="add-shot" class="small-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>添加</button></div><div id="shot-list" class="shot-list" aria-label="镜头列表"></div><div class="script-note"><span class="small-kicker">摄影约束</span><p>定镜头为主，保持同轴构图。人物自然运动，镜头之间硬切。</p><small>时长沿用剧本纸面规划，待声画实测。</small></div></div>
+    <div id="scene-pane" class="resource-pane" hidden>
+      <div class="asset-info"><span class="small-kicker">当前模型</span><strong id="asset-name">山门与庭院</strong><span id="asset-stats">正在读取模型</span><button id="calibrate">尺寸与场景绑定</button></div>
+      <div class="section-label">人物占位 <button id="add-actor" title="添加人物占位" aria-label="添加人物占位"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button></div><div id="actor-list"></div>
+      <div class="section-label">空间锚点 <button id="add-anchor" title="点击模型表面放置锚点" aria-label="添加空间锚点"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button></div><div id="anchor-list"></div>
+      <div class="section-label">语义分组 <span>自动初分</span></div><div id="group-list"></div>
+    </div>
+    <section class="camera-library"><div class="section-label">摄影机 <button id="add-camera" title="从当前观察视角新建相机" aria-label="新建相机"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button></div><div id="camera-list"></div></section>
+    <div class="sidebar-footer"></span><span></span><span class="mono">01 / 山门</span></div>
+  </aside>
+  <div id="gutter-sidebar" class="gutter gutter-vertical" role="separator" aria-orientation="vertical" aria-label="拖拽调整左栏宽度" title="拖拽调整左栏宽度"></div>
+  <section class="stage-panel">
+    <div class="panel-heading"><div><span class="small-kicker">STAGE</span><strong>场景调度</strong></div><div class="compact-actions"><button id="view-top">俯视</button><button id="view-reset">全景</button><button id="toggle-guides" aria-pressed="true">辅助线</button></div></div>    <div id="stage" class="stage-canvas"><div id="loading" class="loading"><span class="loader"></span><strong>正在打开工作台</strong><small>初始化三维视图</small></div>
+      <div id="welcome" class="welcome" hidden>
+        <div class="welcome-card">
+          <h2>选择一个项目开始</h2>
+          <p class="welcome-intro">新建或打开已保存项目</p>
+          <div class="welcome-actions">
+            <button id="welcome-new" class="button-accent">新建项目</button>
+            <button id="welcome-open">打开项目文件</button>
+            <button id="welcome-demo">加载示例</button>
+          </div>
+          <div class="welcome-projects-section"><span class="small-kicker">本机项目</span><div id="welcome-projects" class="welcome-projects"></div></div>
+        </div>
+      </div>
+      <div class="viewport-badge"><i></i><span>自由观察</span><span class="badge-divider"></span><span>Y ↑ · 米</span></div><div class="axis-key"><span class="axis-x">X</span><span class="axis-y">Y</span><span class="axis-z">Z</span></div><div id="stage-instruction" class="stage-instruction">拖动旋转 · 右键平移 · 滚轮缩放</div>
+      <div id="capture-indicator" class="capture-indicator" hidden><span class="capture-dot"></span>REC <span id="capture-time" class="mono"></span><button id="capture-cancel" title="取消录制，不记录路径">取消</button></div></div>
+    <div class="shot-context"><div><span id="context-id" class="mono"></span><strong id="context-title"></strong></div><p id="context-action"></p><button id="show-script" class="text-button">展开剧本 ↗</button></div>
+  </section>
+  <div id="gutter-inspector" class="gutter gutter-vertical" role="separator" aria-orientation="vertical" aria-label="拖拽调整右栏宽度" title="拖拽调整右栏宽度"></div>
+  <aside class="inspector-panel">
+    <div class="panel-heading"><div><strong>相机画面</strong></div><div class="compact-actions"><button id="expand-monitor" title="全屏查看相机画面，Esc 退出">放大</button><button id="snapshot" class="small-button" title="导出当前分镜 PNG">拍一帧</button></div></div>
+    <div id="monitor" class="monitor"><div class="film-safe" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span id="monitor-camera" class="monitor-camera"></span><span id="monitor-time" class="monitor-time mono">00:00:00</span></div>
+    <div class="monitor-caption"><span>16:9 · <span id="fps-label">24</span> fps</span><span>占位预演</span></div><div id="inspector" class="inspector-scroll"></div>
+  </aside>
+  <div id="gutter-timeline" class="gutter gutter-horizontal" role="separator" aria-orientation="horizontal" aria-label="拖拽调整时间轴高度" title="拖拽调整时间轴高度"></div>
+  <section class="timeline-panel" aria-label="镜头时间轴">
+    <div class="transport"><div class="transport-main"><button id="prev-shot" class="icon-button" title="上一个镜头" aria-label="上一个镜头"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5v14l-8 -7z"/><path d="M10 5v14l-8 -7z"/></svg></button><button id="play" class="play-button" aria-label="播放预演">▶</button><button id="next-shot" class="icon-button" title="下一个镜头" aria-label="下一个镜头"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5v14l8 -7z"/><path d="M14 5v14l8 -7z"/></svg></button><span id="playhead-time" class="timecode mono">00:00:00</span><span class="time-divider">/</span><span id="total-time" class="mono subdued">00:12:00</span></div><div class="compact-actions"><span id="timeline-status" class="timeline-status">单镜固定 · 镜间硬切</span><button id="validate">检查镜头</button><span id="validation-badge" class="validation-badge">未检查</span></div></div>
+    <div class="timeline-track"><div id="time-ruler" class="time-ruler"></div><input type="range" id="scrubber" min="0" max="12" step="0.041666667" value="0" aria-label="预演时间"><div id="timeline-clips" class="timeline-clips"></div><div class="timeline-legend"><span><i class="legend-camera"></i>相机</span><span><i class="legend-actor"></i>人物走位</span><span>Space 播放 / 暂停</span><span id="timeline-selected"></span></div></div>
+  </section>
+</main>
+<footer class="statusbar"><span id="status-message">准备就绪</span></footer>
+<div id="toast" class="toast" role="status" hidden></div>
+<dialog id="dialog"><div class="dialog-heading"><div><span id="dialog-kicker" class="small-kicker">PREVIZCAM</span><h2 id="dialog-title"></h2></div><button id="dialog-close" class="icon-button" title="关闭" aria-label="关闭对话框"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></div><div id="dialog-body"></div></dialog>
+<input id="model-file" type="file" accept=".glb" hidden><input id="script-file" type="file" accept=".json" hidden><input id="project-file" type="file" accept=".json,.previzcam" hidden>
+<script type="module" src="preview/app.js"></script>
+</body></html>

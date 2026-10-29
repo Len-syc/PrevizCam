@@ -1,0 +1,14 @@
+__pycache__/
+tests/artifacts/
+tests/*.log
+
+# Local Netlify folder
+.netlify
+
+# Local PrevizCam MCP dependencies and generated review packages
+mcp/node_modules/
+outputs/previzcam/
+outputs/
+
+# Local shortcuts (contain machine-specific absolute paths)
+*.lnk

@@ -1,0 +1,6503 @@
+你是三维镜头规划助手。根据以下实际场景空间数据和剧本，生成镜头方案。
+要求：
+1. 仅输出符合 outputContract 的 JSON，不输出代码或解释。
+2. 保留 sceneId 和 assignments 中已有的 shotId，不增加未知场景或角色。
+3. 使用新的相机 ID，尊重 locked 相机和 motionPolicy；static 镜头必须保持位置、注视点、fov 不变，仅含 t=0 的一个关键点。
+4. 对运动镜头使用按 t 严格递增的少量关键点，首尾必须为 0 和 1。t 是镜头内归一化时间，fov 是垂直视场角，坐标为米、右手系、Y 向上。
+5. 语义分组的包围盒不等于实心障碍物，门洞可能在其中。提出候选方案，不能声称已验证无碰撞；方案将返回网站做几何检查。
+6. 注意人物头部安全构图、同轴接续和纸面时长。只有明确允许时才使用运镜。
+7. 网格清单可能被截断，meshes.nextOffset 不为 null 时可用 meshOffset 继续导出。
+
+{
+  "type": "previzcam.spatial-context",
+  "version": 1,
+  "sceneId": "LOC_GATE",
+  "name": "寺门与院廊",
+  "format": {
+    "fps": 24,
+    "width": 1280,
+    "height": 720
+  },
+  "aspect": 1.7777777777777777,
+  "coordinates": {
+    "units": "metres",
+    "handedness": "right",
+    "up": "+Y",
+    "forward": "-Z",
+    "positions": "world",
+    "angles": "degrees",
+    "fov": "vertical",
+    "keyframeTime": "normalized 0..1 within each shot"
+  },
+  "transform": {
+    "scale": 1,
+    "rotationY": 0,
+    "offset": [
+      0,
+      0,
+      0
+    ]
+  },
+  "bounds": {
+    "min": [
+      -6.5,
+      -0.2,
+      -10.685
+    ],
+    "max": [
+      6.5,
+      5.165,
+      4.15
+    ]
+  },
+  "objects": [
+    {
+      "id": "approach",
+      "name": "门外铺地与石阶",
+      "nodeCount": 92,
+      "bounds": {
+        "min": [
+          -6.5,
+          -0.2,
+          -6.93
+        ],
+        "max": [
+          6.5,
+          0.68,
+          4.15
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "walls",
+      "name": "围墙与立柱",
+      "nodeCount": 262,
+      "bounds": {
+        "min": [
+          -6.3608,
+          0.34,
+          -10.33
+        ],
+        "max": [
+          6.3608,
+          3.415,
+          0.3608
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "ground",
+      "name": "庭院地面",
+      "nodeCount": 210,
+      "bounds": {
+        "min": [
+          -6,
+          0.285,
+          -10.095
+        ],
+        "max": [
+          6,
+          0.68,
+          0.0175
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "other",
+      "name": "其他结构",
+      "nodeCount": 60,
+      "bounds": {
+        "min": [
+          -6.25,
+          -0.155,
+          -10.6626
+        ],
+        "max": [
+          6.25,
+          4.9726,
+          0.25
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "roof",
+      "name": "屋顶与瓦面",
+      "nodeCount": 81,
+      "bounds": {
+        "min": [
+          -6.35,
+          2.83,
+          -10.685
+        ],
+        "max": [
+          6.35,
+          5.165,
+          1.3
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "gate",
+      "name": "山门与门框",
+      "nodeCount": 265,
+      "bounds": {
+        "min": [
+          -3.277,
+          0.44,
+          -7.9203
+        ],
+        "max": [
+          3.277,
+          4.7154,
+          1.277
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "plants",
+      "name": "植物与景石",
+      "nodeCount": 72,
+      "bounds": {
+        "min": [
+          -0.1857,
+          2.5237,
+          -6.7057
+        ],
+        "max": [
+          0.1857,
+          3.1559,
+          -6.3343
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "furniture",
+      "name": "石凳与灯笼",
+      "nodeCount": 10,
+      "bounds": {
+        "min": [
+          -5.08,
+          0.46,
+          -6.7
+        ],
+        "max": [
+          5.08,
+          3.49,
+          -3.925
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    },
+    {
+      "id": "windows",
+      "name": "窗与格栅",
+      "nodeCount": 22,
+      "bounds": {
+        "min": [
+          -2.67,
+          1.67,
+          -6.7275
+        ],
+        "max": [
+          2.67,
+          2.51,
+          -6.57
+        ]
+      },
+      "note": "分组包围盒仅描述范围，不能当作实心障碍物；门洞可能位于范围内。"
+    }
+  ],
+  "meshes": {
+    "detail": "full",
+    "total": 1074,
+    "matched": 1074,
+    "offset": 0,
+    "limit": 200,
+    "sort": "size",
+    "filters": {
+      "query": null,
+      "group": null
+    },
+    "returned": 200,
+    "items": [
+      {
+        "id": "mesh_302",
+        "name": "courtyard_platform",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.12,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.25,
+            -0.155,
+            -10.2
+          ],
+          "max": [
+            6.25,
+            0.395,
+            0.2
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 71.5
+      },
+      {
+        "id": "mesh_858",
+        "name": "rear_hall_individual_clay_tiles_mesh",
+        "parent": "rear_hall_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.8532,
+            3.65,
+            -10.66
+          ],
+          "max": [
+            3.8532,
+            4.9323,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 44.2701
+      },
+      {
+        "id": "mesh_859",
+        "name": "rear_hall_individual_clay_tiles_mesh_1",
+        "parent": "rear_hall_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.8532,
+            3.65,
+            -10.66
+          ],
+          "max": [
+            3.8532,
+            4.9323,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 44.2701
+      },
+      {
+        "id": "mesh_860",
+        "name": "rear_hall_individual_clay_tiles_mesh_2",
+        "parent": "rear_hall_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.8532,
+            3.65,
+            -10.66
+          ],
+          "max": [
+            3.8532,
+            4.9323,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 44.2701
+      },
+      {
+        "id": "mesh_861",
+        "name": "rear_hall_individual_clay_tiles_mesh_3",
+        "parent": "rear_hall_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.8532,
+            3.65,
+            -10.66
+          ],
+          "max": [
+            3.8532,
+            4.9323,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 44.2701
+      },
+      {
+        "id": "mesh_862",
+        "name": "rear_hall_individual_clay_tiles_mesh_4",
+        "parent": "rear_hall_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.8532,
+            3.65,
+            -10.66
+          ],
+          "max": [
+            3.8532,
+            4.9323,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 44.2701
+      },
+      {
+        "id": "mesh_866",
+        "name": "rear_hall_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.86,
+            3.61,
+            -10.66
+          ],
+          "max": [
+            3.86,
+            4.86,
+            -6.18
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 43.232
+      },
+      {
+        "id": "mesh_638",
+        "name": "gate_pavilion_individual_clay_tiles_mesh_2",
+        "parent": "gate_pavilion_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.268,
+            3.55,
+            -1.275
+          ],
+          "max": [
+            3.268,
+            4.6791,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.8188
+      },
+      {
+        "id": "mesh_639",
+        "name": "gate_pavilion_individual_clay_tiles_mesh_3",
+        "parent": "gate_pavilion_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.268,
+            3.55,
+            -1.275
+          ],
+          "max": [
+            3.268,
+            4.6791,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.8188
+      },
+      {
+        "id": "mesh_640",
+        "name": "gate_pavilion_individual_clay_tiles_mesh_4",
+        "parent": "gate_pavilion_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.268,
+            3.55,
+            -1.275
+          ],
+          "max": [
+            3.268,
+            4.6791,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.8188
+      },
+      {
+        "id": "mesh_637",
+        "name": "gate_pavilion_individual_clay_tiles_mesh_1",
+        "parent": "gate_pavilion_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.268,
+            3.55,
+            -1.275
+          ],
+          "max": [
+            3.2596,
+            4.6791,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.7947
+      },
+      {
+        "id": "mesh_636",
+        "name": "gate_pavilion_individual_clay_tiles_mesh",
+        "parent": "gate_pavilion_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.2596,
+            3.55,
+            -1.275
+          ],
+          "max": [
+            3.2596,
+            4.6787,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.7642
+      },
+      {
+        "id": "mesh_644",
+        "name": "gate_pavilion_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.275,
+            3.51,
+            -1.275
+          ],
+          "max": [
+            3.275,
+            4.61,
+            1.275
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 18.3728
+      },
+      {
+        "id": "mesh_93",
+        "name": "courtyard_dark_grout",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.36,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6,
+            0.285,
+            -10
+          ],
+          "max": [
+            6,
+            0.435,
+            0
+          ]
+        },
+        "semanticGroup": "ground",
+        "volume": 18
+      },
+      {
+        "id": "mesh_807",
+        "name": "rear_boundary_wall",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          1.715,
+          -10
+        ],
+        "bounds": {
+          "min": [
+            -6,
+            0.44,
+            -10.18
+          ],
+          "max": [
+            6,
+            2.99,
+            -9.82
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 11.016
+      },
+      {
+        "id": "mesh_306",
+        "name": "front_approach_grout",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          -0.1,
+          2.25
+        ],
+        "bounds": {
+          "min": [
+            -6.5,
+            -0.2,
+            0.35
+          ],
+          "max": [
+            6.5,
+            0,
+            4.15
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 9.88
+      },
+      {
+        "id": "mesh_990",
+        "name": "side_wall_plaster_1",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          1.715,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.82,
+            0.44,
+            -10
+          ],
+          "max": [
+            6.18,
+            2.99,
+            0
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 9.18
+      },
+      {
+        "id": "mesh_991",
+        "name": "side_wall_plaster_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          1.715,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.18,
+            0.44,
+            -10
+          ],
+          "max": [
+            -5.82,
+            2.99,
+            0
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 9.18
+      },
+      {
+        "id": "mesh_782",
+        "name": "hall_rear_wall",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          1.99,
+          -9.82
+        ],
+        "bounds": {
+          "min": [
+            -3.4,
+            0.565,
+            -9.97
+          ],
+          "max": [
+            3.4,
+            3.415,
+            -9.67
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 5.814
+      },
+      {
+        "id": "mesh_781",
+        "name": "hall_raised_plinth",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.56,
+          -8.42
+        ],
+        "bounds": {
+          "min": [
+            -3.575,
+            0.44,
+            -10.095
+          ],
+          "max": [
+            3.575,
+            0.68,
+            -6.745
+          ]
+        },
+        "semanticGroup": "ground",
+        "volume": 5.7486
+      },
+      {
+        "id": "mesh_427",
+        "name": "front_wing_plaster_1",
+        "parent": "Scene",
+        "worldPosition": [
+          3.755,
+          1.715,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.51,
+            0.44,
+            -0.18
+          ],
+          "max": [
+            6,
+            2.99,
+            0.18
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 4.1218
+      },
+      {
+        "id": "mesh_428",
+        "name": "front_wing_plaster_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.755,
+          1.715,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6,
+            0.44,
+            -0.18
+          ],
+          "max": [
+            -1.51,
+            2.99,
+            0.18
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 4.1218
+      },
+      {
+        "id": "mesh_783",
+        "name": "hall_side_wall_1",
+        "parent": "Scene",
+        "worldPosition": [
+          3.25,
+          1.99,
+          -8.42
+        ],
+        "bounds": {
+          "min": [
+            3.1,
+            0.565,
+            -9.97
+          ],
+          "max": [
+            3.4,
+            3.415,
+            -6.87
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 2.6505
+      },
+      {
+        "id": "mesh_784",
+        "name": "hall_side_wall_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.25,
+          1.99,
+          -8.42
+        ],
+        "bounds": {
+          "min": [
+            -3.4,
+            0.565,
+            -9.97
+          ],
+          "max": [
+            -3.1,
+            3.415,
+            -6.87
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 2.6505
+      },
+      {
+        "id": "mesh_922",
+        "name": "side_wall_cap_1_individual_clay_tiles_mesh",
+        "parent": "side_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            6.325,
+            3.363,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 2.0036
+      },
+      {
+        "id": "mesh_924",
+        "name": "side_wall_cap_1_individual_clay_tiles_mesh_2",
+        "parent": "side_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            6.325,
+            3.363,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 2.0036
+      },
+      {
+        "id": "mesh_981",
+        "name": "side_wall_cap_-1_individual_clay_tiles_mesh",
+        "parent": "side_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            -5.675,
+            3.363,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 2.0036
+      },
+      {
+        "id": "mesh_985",
+        "name": "side_wall_cap_-1_individual_clay_tiles_mesh_4",
+        "parent": "side_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            -5.675,
+            3.363,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 2.0036
+      },
+      {
+        "id": "mesh_926",
+        "name": "side_wall_cap_1_individual_clay_tiles_mesh_4",
+        "parent": "side_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            6.325,
+            3.363,
+            0.0334
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 2.0018
+      },
+      {
+        "id": "mesh_982",
+        "name": "side_wall_cap_-1_individual_clay_tiles_mesh_1",
+        "parent": "side_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            3.0573,
+            -10.0077
+          ],
+          "max": [
+            -5.675,
+            3.363,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.9967
+      },
+      {
+        "id": "mesh_983",
+        "name": "side_wall_cap_-1_individual_clay_tiles_mesh_2",
+        "parent": "side_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            3.0573,
+            -9.9692
+          ],
+          "max": [
+            -5.675,
+            3.363,
+            0.0334
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.9873
+      },
+      {
+        "id": "mesh_923",
+        "name": "side_wall_cap_1_individual_clay_tiles_mesh_1",
+        "parent": "side_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            6.325,
+            3.363,
+            -0.0762
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.98
+      },
+      {
+        "id": "mesh_984",
+        "name": "side_wall_cap_-1_individual_clay_tiles_mesh_3",
+        "parent": "side_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            3.0573,
+            -10.0424
+          ],
+          "max": [
+            -5.675,
+            3.3583,
+            0.0334
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.9712
+      },
+      {
+        "id": "mesh_692",
+        "name": "hall_front_panel_1",
+        "parent": "Scene",
+        "worldPosition": [
+          2.22,
+          1.99,
+          -6.87
+        ],
+        "bounds": {
+          "min": [
+            1.08,
+            0.565,
+            -7.02
+          ],
+          "max": [
+            3.36,
+            3.415,
+            -6.72
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 1.9494
+      },
+      {
+        "id": "mesh_693",
+        "name": "hall_front_panel_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.22,
+          1.99,
+          -6.87
+        ],
+        "bounds": {
+          "min": [
+            -3.36,
+            0.565,
+            -7.02
+          ],
+          "max": [
+            -1.08,
+            3.415,
+            -6.72
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 1.9494
+      },
+      {
+        "id": "mesh_925",
+        "name": "side_wall_cap_1_individual_clay_tiles_mesh_3",
+        "parent": "side_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            3.0573,
+            -9.8783
+          ],
+          "max": [
+            6.325,
+            3.3565,
+            0.0424
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.9294
+      },
+      {
+        "id": "mesh_930",
+        "name": "side_wall_cap_1_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.675,
+            2.9956,
+            -10.05
+          ],
+          "max": [
+            6.325,
+            3.28,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.8674
+      },
+      {
+        "id": "mesh_989",
+        "name": "side_wall_cap_-1_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          0,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.325,
+            2.9956,
+            -10.05
+          ],
+          "max": [
+            -5.675,
+            3.28,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 1.8674
+      },
+      {
+        "id": "mesh_694",
+        "name": "hall_inside_floor",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.66,
+          -8.42
+        ],
+        "bounds": {
+          "min": [
+            -3.2,
+            0.61,
+            -9.795
+          ],
+          "max": [
+            3.2,
+            0.71,
+            -7.045
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 1.76
+      },
+      {
+        "id": "mesh_645",
+        "name": "gate_side_panel_1",
+        "parent": "Scene",
+        "worldPosition": [
+          2.07,
+          1.79,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.42,
+            0.44,
+            -0.2
+          ],
+          "max": [
+            2.72,
+            3.14,
+            0.2
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 1.404
+      },
+      {
+        "id": "mesh_646",
+        "name": "gate_side_panel_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.07,
+          1.79,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -2.72,
+            0.44,
+            -0.2
+          ],
+          "max": [
+            -1.42,
+            3.14,
+            0.2
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 1.404
+      },
+      {
+        "id": "mesh_870",
+        "name": "side_stone_base_1",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          0.58,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.78,
+            0.44,
+            -10
+          ],
+          "max": [
+            6.22,
+            0.72,
+            0
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 1.232
+      },
+      {
+        "id": "mesh_871",
+        "name": "side_stone_base_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          0.58,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.22,
+            0.44,
+            -10
+          ],
+          "max": [
+            -5.78,
+            0.72,
+            0
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 1.232
+      },
+      {
+        "id": "mesh_360",
+        "name": "front_wall_cap_1_individual_clay_tiles_mesh_1",
+        "parent": "front_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.4677,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            6.0423,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8524
+      },
+      {
+        "id": "mesh_422",
+        "name": "front_wall_cap_-1_individual_clay_tiles_mesh_4",
+        "parent": "front_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.0423,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            -1.4677,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8524
+      },
+      {
+        "id": "mesh_418",
+        "name": "front_wall_cap_-1_individual_clay_tiles_mesh",
+        "parent": "front_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.0332,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            -1.4677,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8507
+      },
+      {
+        "id": "mesh_421",
+        "name": "front_wall_cap_-1_individual_clay_tiles_mesh_3",
+        "parent": "front_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.0423,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            -1.4768,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8507
+      },
+      {
+        "id": "mesh_363",
+        "name": "front_wall_cap_1_individual_clay_tiles_mesh_4",
+        "parent": "front_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.4768,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            6.0332,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.849
+      },
+      {
+        "id": "mesh_367",
+        "name": "front_wall_cap_1_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.46,
+            2.9956,
+            -0.325
+          ],
+          "max": [
+            6.05,
+            3.28,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8486
+      },
+      {
+        "id": "mesh_426",
+        "name": "front_wall_cap_-1_roof_shell",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.05,
+            2.9956,
+            -0.325
+          ],
+          "max": [
+            -1.46,
+            3.28,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8486
+      },
+      {
+        "id": "mesh_362",
+        "name": "front_wall_cap_1_individual_clay_tiles_mesh_3",
+        "parent": "front_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.5028,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            6.0423,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8459
+      },
+      {
+        "id": "mesh_361",
+        "name": "front_wall_cap_1_individual_clay_tiles_mesh_2",
+        "parent": "front_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.4768,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            6.0072,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8442
+      },
+      {
+        "id": "mesh_359",
+        "name": "front_wall_cap_1_individual_clay_tiles_mesh",
+        "parent": "front_wall_cap_1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.4677,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            5.9684,
+            3.344,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8386
+      },
+      {
+        "id": "mesh_420",
+        "name": "front_wall_cap_-1_individual_clay_tiles_mesh_2",
+        "parent": "front_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.0423,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            -1.4677,
+            3.3365,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8301
+      },
+      {
+        "id": "mesh_419",
+        "name": "front_wall_cap_-1_individual_clay_tiles_mesh_1",
+        "parent": "front_wall_cap_-1_individual_clay_tiles",
+        "worldPosition": [
+          0,
+          0,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -5.9225,
+            3.0573,
+            -0.325
+          ],
+          "max": [
+            -1.4768,
+            3.339,
+            0.325
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.8138
+      },
+      {
+        "id": "mesh_585",
+        "name": "gate_lintel",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.24,
+          0.1
+        ],
+        "bounds": {
+          "min": [
+            -3.05,
+            3.1,
+            -0.13
+          ],
+          "max": [
+            3.05,
+            3.38,
+            0.33
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.7857
+      },
+      {
+        "id": "mesh_305",
+        "name": "entrance_step_2",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.18,
+          0.4
+        ],
+        "bounds": {
+          "min": [
+            -1.85,
+            -0.08,
+            0.2
+          ],
+          "max": [
+            1.85,
+            0.44,
+            0.6
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.7696
+      },
+      {
+        "id": "mesh_695",
+        "name": "hall_interior_altar",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          1.19,
+          -9.1
+        ],
+        "bounds": {
+          "min": [
+            -0.725,
+            0.73,
+            -9.38
+          ],
+          "max": [
+            0.725,
+            1.65,
+            -8.82
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 0.747
+      },
+      {
+        "id": "mesh_89",
+        "name": "corner_wall_pier",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          1.715,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.26,
+            0.34,
+            -0.26
+          ],
+          "max": [
+            -5.74,
+            3.09,
+            0.26
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.7436
+      },
+      {
+        "id": "mesh_90",
+        "name": "corner_wall_pier001",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          1.715,
+          -10
+        ],
+        "bounds": {
+          "min": [
+            -6.26,
+            0.34,
+            -10.26
+          ],
+          "max": [
+            -5.74,
+            3.09,
+            -9.74
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.7436
+      },
+      {
+        "id": "mesh_91",
+        "name": "corner_wall_pier002",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          1.715,
+          0
+        ],
+        "bounds": {
+          "min": [
+            5.74,
+            0.34,
+            -0.26
+          ],
+          "max": [
+            6.26,
+            3.09,
+            0.26
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.7436
+      },
+      {
+        "id": "mesh_92",
+        "name": "corner_wall_pier003",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          1.715,
+          -10
+        ],
+        "bounds": {
+          "min": [
+            5.74,
+            0.34,
+            -10.26
+          ],
+          "max": [
+            6.26,
+            3.09,
+            -9.74
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.7436
+      },
+      {
+        "id": "mesh_696",
+        "name": "hall_porch_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.39,
+          -6.51
+        ],
+        "bounds": {
+          "min": [
+            -3.45,
+            3.26,
+            -6.68
+          ],
+          "max": [
+            3.45,
+            3.52,
+            -6.34
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 0.61
+      },
+      {
+        "id": "mesh_307",
+        "name": "front_stone_base_1",
+        "parent": "Scene",
+        "worldPosition": [
+          3.755,
+          0.58,
+          0.03
+        ],
+        "bounds": {
+          "min": [
+            1.51,
+            0.44,
+            -0.19
+          ],
+          "max": [
+            6,
+            0.72,
+            0.25
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 0.5532
+      },
+      {
+        "id": "mesh_308",
+        "name": "front_stone_base_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.755,
+          0.58,
+          0.03
+        ],
+        "bounds": {
+          "min": [
+            -6,
+            0.44,
+            -0.19
+          ],
+          "max": [
+            -1.51,
+            0.72,
+            0.25
+          ]
+        },
+        "semanticGroup": "other",
+        "volume": 0.5532
+      },
+      {
+        "id": "mesh_304",
+        "name": "entrance_step_1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.1067,
+          0.8
+        ],
+        "bounds": {
+          "min": [
+            -1.85,
+            -0.08,
+            0.6
+          ],
+          "max": [
+            1.85,
+            0.2933,
+            1
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.5525
+      },
+      {
+        "id": "mesh_869",
+        "name": "rear_hall_step_2",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.56,
+          -6.63
+        ],
+        "bounds": {
+          "min": [
+            -1.35,
+            0.44,
+            -6.93
+          ],
+          "max": [
+            1.35,
+            0.68,
+            -6.33
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.3888
+      },
+      {
+        "id": "mesh_303",
+        "name": "entrance_step_0",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.0333,
+          1.2
+        ],
+        "bounds": {
+          "min": [
+            -1.85,
+            -0.08,
+            1
+          ],
+          "max": [
+            1.85,
+            0.1467,
+            1.4
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.3355
+      },
+      {
+        "id": "mesh_927",
+        "name": "side_wall_cap_1_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          3.27,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.92,
+            3.175,
+            -10.11
+          ],
+          "max": [
+            6.08,
+            3.365,
+            0.11
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.3107
+      },
+      {
+        "id": "mesh_986",
+        "name": "side_wall_cap_-1_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          3.27,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.08,
+            3.175,
+            -10.11
+          ],
+          "max": [
+            -5.92,
+            3.365,
+            0.11
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.3107
+      },
+      {
+        "id": "mesh_868",
+        "name": "rear_hall_step_1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.52,
+          -6.41
+        ],
+        "bounds": {
+          "min": [
+            -1.35,
+            0.44,
+            -6.71
+          ],
+          "max": [
+            1.35,
+            0.6,
+            -6.11
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.2592
+      },
+      {
+        "id": "mesh_863",
+        "name": "rear_hall_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          4.85,
+          -8.42
+        ],
+        "bounds": {
+          "min": [
+            -3.92,
+            4.755,
+            -8.5
+          ],
+          "max": [
+            3.92,
+            4.945,
+            -8.34
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2383
+      },
+      {
+        "id": "mesh_872",
+        "name": "side_wall_cap_1_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          5.705,
+          2.93,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            5.65,
+            2.83,
+            -10.05
+          ],
+          "max": [
+            5.76,
+            3.03,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2222
+      },
+      {
+        "id": "mesh_873",
+        "name": "side_wall_cap_1_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          6.295,
+          2.93,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            6.24,
+            2.83,
+            -10.05
+          ],
+          "max": [
+            6.35,
+            3.03,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2222
+      },
+      {
+        "id": "mesh_931",
+        "name": "side_wall_cap_-1_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          -6.295,
+          2.93,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -6.35,
+            2.83,
+            -10.05
+          ],
+          "max": [
+            -6.24,
+            3.03,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2222
+      },
+      {
+        "id": "mesh_932",
+        "name": "side_wall_cap_-1_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -5.705,
+          2.93,
+          -5
+        ],
+        "bounds": {
+          "min": [
+            -5.76,
+            2.83,
+            -10.05
+          ],
+          "max": [
+            -5.65,
+            3.03,
+            0.05
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2222
+      },
+      {
+        "id": "mesh_641",
+        "name": "gate_pavilion_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          4.6,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -3.335,
+            4.505,
+            -0.08
+          ],
+          "max": [
+            3.335,
+            4.695,
+            0.08
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.2028
+      },
+      {
+        "id": "mesh_808",
+        "name": "rear_hall_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.51,
+          -10.63
+        ],
+        "bounds": {
+          "min": [
+            -3.86,
+            3.41,
+            -10.685
+          ],
+          "max": [
+            3.86,
+            3.61,
+            -10.575
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1698
+      },
+      {
+        "id": "mesh_809",
+        "name": "rear_hall_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.51,
+          -6.21
+        ],
+        "bounds": {
+          "min": [
+            -3.86,
+            3.41,
+            -6.265
+          ],
+          "max": [
+            3.86,
+            3.61,
+            -6.155
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1698
+      },
+      {
+        "id": "mesh_586",
+        "name": "gate_pavilion_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.41,
+          -1.245
+        ],
+        "bounds": {
+          "min": [
+            -3.275,
+            3.31,
+            -1.3
+          ],
+          "max": [
+            3.275,
+            3.51,
+            -1.19
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1441
+      },
+      {
+        "id": "mesh_587",
+        "name": "gate_pavilion_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.41,
+          1.245
+        ],
+        "bounds": {
+          "min": [
+            -3.275,
+            3.31,
+            1.19
+          ],
+          "max": [
+            3.275,
+            3.51,
+            1.3
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1441
+      },
+      {
+        "id": "mesh_364",
+        "name": "front_wall_cap_1_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          3.755,
+          3.27,
+          0
+        ],
+        "bounds": {
+          "min": [
+            1.4,
+            3.175,
+            -0.08
+          ],
+          "max": [
+            6.11,
+            3.365,
+            0.08
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1432
+      },
+      {
+        "id": "mesh_423",
+        "name": "front_wall_cap_-1_ridge_beam",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.755,
+          3.27,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.11,
+            3.175,
+            -0.08
+          ],
+          "max": [
+            -1.4,
+            3.365,
+            0.08
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.1432
+      },
+      {
+        "id": "mesh_651",
+        "name": "gate_timber_column",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.5,
+          1.91,
+          0.29
+        ],
+        "bounds": {
+          "min": [
+            -1.6,
+            0.52,
+            0.17
+          ],
+          "max": [
+            -1.4,
+            3.3,
+            0.41
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.1334
+      },
+      {
+        "id": "mesh_652",
+        "name": "gate_timber_column001",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.9,
+          1.91,
+          0.29
+        ],
+        "bounds": {
+          "min": [
+            -3,
+            0.52,
+            0.17
+          ],
+          "max": [
+            -2.8,
+            3.3,
+            0.41
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.1334
+      },
+      {
+        "id": "mesh_653",
+        "name": "gate_timber_column002",
+        "parent": "Scene",
+        "worldPosition": [
+          1.5,
+          1.91,
+          0.29
+        ],
+        "bounds": {
+          "min": [
+            1.4,
+            0.52,
+            0.17
+          ],
+          "max": [
+            1.6,
+            3.3,
+            0.41
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.1334
+      },
+      {
+        "id": "mesh_654",
+        "name": "gate_timber_column003",
+        "parent": "Scene",
+        "worldPosition": [
+          2.9,
+          1.91,
+          0.29
+        ],
+        "bounds": {
+          "min": [
+            2.8,
+            0.52,
+            0.17
+          ],
+          "max": [
+            3,
+            3.3,
+            0.41
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.1334
+      },
+      {
+        "id": "mesh_867",
+        "name": "rear_hall_step_0",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          0.48,
+          -6.19
+        ],
+        "bounds": {
+          "min": [
+            -1.35,
+            0.44,
+            -6.49
+          ],
+          "max": [
+            1.35,
+            0.52,
+            -5.89
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.1296
+      },
+      {
+        "id": "mesh_697",
+        "name": "hall_porch_column",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.13,
+          1.99,
+          -6.51
+        ],
+        "bounds": {
+          "min": [
+            -1.225,
+            0.61,
+            -6.63
+          ],
+          "max": [
+            -1.035,
+            3.37,
+            -6.39
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.1259
+      },
+      {
+        "id": "mesh_702",
+        "name": "hall_porch_column001",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.25,
+          1.99,
+          -6.51
+        ],
+        "bounds": {
+          "min": [
+            -3.345,
+            0.61,
+            -6.63
+          ],
+          "max": [
+            -3.155,
+            3.37,
+            -6.39
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.1259
+      },
+      {
+        "id": "mesh_703",
+        "name": "hall_porch_column002",
+        "parent": "Scene",
+        "worldPosition": [
+          1.13,
+          1.99,
+          -6.51
+        ],
+        "bounds": {
+          "min": [
+            1.035,
+            0.61,
+            -6.63
+          ],
+          "max": [
+            1.225,
+            3.37,
+            -6.39
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.1259
+      },
+      {
+        "id": "mesh_704",
+        "name": "hall_porch_column003",
+        "parent": "Scene",
+        "worldPosition": [
+          3.25,
+          1.99,
+          -6.51
+        ],
+        "bounds": {
+          "min": [
+            3.155,
+            0.61,
+            -6.63
+          ],
+          "max": [
+            3.345,
+            3.37,
+            -6.39
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.1259
+      },
+      {
+        "id": "mesh_996",
+        "name": "stone_bench_seat_1",
+        "parent": "Scene",
+        "worldPosition": [
+          4.85,
+          0.96,
+          -4.8
+        ],
+        "bounds": {
+          "min": [
+            4.62,
+            0.89,
+            -5.675
+          ],
+          "max": [
+            5.08,
+            1.03,
+            -3.925
+          ]
+        },
+        "semanticGroup": "furniture",
+        "volume": 0.1127
+      },
+      {
+        "id": "mesh_997",
+        "name": "stone_bench_seat_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -4.85,
+          0.96,
+          -4.8
+        ],
+        "bounds": {
+          "min": [
+            -5.08,
+            0.89,
+            -5.675
+          ],
+          "max": [
+            -4.62,
+            1.03,
+            -3.925
+          ]
+        },
+        "semanticGroup": "furniture",
+        "volume": 0.1127
+      },
+      {
+        "id": "mesh_309",
+        "name": "front_wall_cap_1_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          3.755,
+          2.93,
+          -0.295
+        ],
+        "bounds": {
+          "min": [
+            1.46,
+            2.83,
+            -0.35
+          ],
+          "max": [
+            6.05,
+            3.03,
+            -0.24
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.101
+      },
+      {
+        "id": "mesh_310",
+        "name": "front_wall_cap_1_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          3.755,
+          2.93,
+          0.295
+        ],
+        "bounds": {
+          "min": [
+            1.46,
+            2.83,
+            0.24
+          ],
+          "max": [
+            6.05,
+            3.03,
+            0.35
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.101
+      },
+      {
+        "id": "mesh_368",
+        "name": "front_wall_cap_-1_eave_fascia_1",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.755,
+          2.93,
+          -0.295
+        ],
+        "bounds": {
+          "min": [
+            -6.05,
+            2.83,
+            -0.35
+          ],
+          "max": [
+            -1.46,
+            3.03,
+            -0.24
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.101
+      },
+      {
+        "id": "mesh_369",
+        "name": "front_wall_cap_-1_eave_fascia_-1",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.755,
+          2.93,
+          0.295
+        ],
+        "bounds": {
+          "min": [
+            -6.05,
+            2.83,
+            0.24
+          ],
+          "max": [
+            -1.46,
+            3.03,
+            0.35
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.101
+      },
+      {
+        "id": "mesh_1048",
+        "name": "gate_open_leaf_1_door_plank",
+        "parent": "Scene",
+        "worldPosition": [
+          1.3811,
+          1.645,
+          -0.2547
+        ],
+        "bounds": {
+          "min": [
+            1.3133,
+            0.47,
+            -0.3919
+          ],
+          "max": [
+            1.4489,
+            2.82,
+            -0.1175
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1049",
+        "name": "gate_open_leaf_1_door_plank001",
+        "parent": "Scene",
+        "worldPosition": [
+          1.3432,
+          1.645,
+          -0.524
+        ],
+        "bounds": {
+          "min": [
+            1.2754,
+            0.47,
+            -0.6612
+          ],
+          "max": [
+            1.411,
+            2.82,
+            -0.3869
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1050",
+        "name": "gate_open_leaf_1_door_plank002",
+        "parent": "Scene",
+        "worldPosition": [
+          1.3054,
+          1.645,
+          -0.7934
+        ],
+        "bounds": {
+          "min": [
+            1.2375,
+            0.47,
+            -0.9306
+          ],
+          "max": [
+            1.3732,
+            2.82,
+            -0.6562
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1051",
+        "name": "gate_open_leaf_1_door_plank003",
+        "parent": "Scene",
+        "worldPosition": [
+          1.2675,
+          1.645,
+          -1.0627
+        ],
+        "bounds": {
+          "min": [
+            1.1997,
+            0.47,
+            -1.1999
+          ],
+          "max": [
+            1.3353,
+            2.82,
+            -0.9256
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1052",
+        "name": "gate_open_leaf_1_door_plank004",
+        "parent": "Scene",
+        "worldPosition": [
+          1.2297,
+          1.645,
+          -1.3321
+        ],
+        "bounds": {
+          "min": [
+            1.1618,
+            0.47,
+            -1.4693
+          ],
+          "max": [
+            1.2975,
+            2.82,
+            -1.1949
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1055",
+        "name": "gate_open_leaf_-1_door_plank",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.3811,
+          1.645,
+          -0.2547
+        ],
+        "bounds": {
+          "min": [
+            -1.4489,
+            0.47,
+            -0.3919
+          ],
+          "max": [
+            -1.3133,
+            2.82,
+            -0.1175
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1056",
+        "name": "gate_open_leaf_-1_door_plank001",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.3432,
+          1.645,
+          -0.524
+        ],
+        "bounds": {
+          "min": [
+            -1.411,
+            0.47,
+            -0.6612
+          ],
+          "max": [
+            -1.2754,
+            2.82,
+            -0.3869
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1057",
+        "name": "gate_open_leaf_-1_door_plank002",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.3054,
+          1.645,
+          -0.7934
+        ],
+        "bounds": {
+          "min": [
+            -1.3732,
+            0.47,
+            -0.9306
+          ],
+          "max": [
+            -1.2375,
+            2.82,
+            -0.6562
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1058",
+        "name": "gate_open_leaf_-1_door_plank003",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.2675,
+          1.645,
+          -1.0627
+        ],
+        "bounds": {
+          "min": [
+            -1.3353,
+            0.47,
+            -1.1999
+          ],
+          "max": [
+            -1.1997,
+            2.82,
+            -0.9256
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1059",
+        "name": "gate_open_leaf_-1_door_plank004",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.2297,
+          1.645,
+          -1.3321
+        ],
+        "bounds": {
+          "min": [
+            -1.2975,
+            0.47,
+            -1.4693
+          ],
+          "max": [
+            -1.1618,
+            2.82,
+            -1.1949
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0874
+      },
+      {
+        "id": "mesh_1062",
+        "name": "rear_hall_open_leaf_1_door_plank",
+        "parent": "Scene",
+        "worldPosition": [
+          1.0479,
+          1.67,
+          -7.0189
+        ],
+        "bounds": {
+          "min": [
+            0.9696,
+            0.47,
+            -7.129
+          ],
+          "max": [
+            1.1262,
+            2.87,
+            -6.9088
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1063",
+        "name": "rear_hall_open_leaf_1_door_plank001",
+        "parent": "Scene",
+        "worldPosition": [
+          0.9836,
+          1.67,
+          -7.2167
+        ],
+        "bounds": {
+          "min": [
+            0.9053,
+            0.47,
+            -7.3268
+          ],
+          "max": [
+            1.0619,
+            2.87,
+            -7.1066
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1064",
+        "name": "rear_hall_open_leaf_1_door_plank002",
+        "parent": "Scene",
+        "worldPosition": [
+          0.9193,
+          1.67,
+          -7.4145
+        ],
+        "bounds": {
+          "min": [
+            0.841,
+            0.47,
+            -7.5246
+          ],
+          "max": [
+            0.9976,
+            2.87,
+            -7.3045
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1065",
+        "name": "rear_hall_open_leaf_1_door_plank003",
+        "parent": "Scene",
+        "worldPosition": [
+          0.855,
+          1.67,
+          -7.6124
+        ],
+        "bounds": {
+          "min": [
+            0.7767,
+            0.47,
+            -7.7225
+          ],
+          "max": [
+            0.9333,
+            2.87,
+            -7.5023
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1066",
+        "name": "rear_hall_open_leaf_1_door_plank004",
+        "parent": "Scene",
+        "worldPosition": [
+          0.7908,
+          1.67,
+          -7.8102
+        ],
+        "bounds": {
+          "min": [
+            0.7125,
+            0.47,
+            -7.9203
+          ],
+          "max": [
+            0.8691,
+            2.87,
+            -7.7001
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1069",
+        "name": "rear_hall_open_leaf_-1_door_plank",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.0479,
+          1.67,
+          -7.0189
+        ],
+        "bounds": {
+          "min": [
+            -1.1262,
+            0.47,
+            -7.129
+          ],
+          "max": [
+            -0.9696,
+            2.87,
+            -6.9088
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1070",
+        "name": "rear_hall_open_leaf_-1_door_plank001",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.9836,
+          1.67,
+          -7.2167
+        ],
+        "bounds": {
+          "min": [
+            -1.0619,
+            0.47,
+            -7.3268
+          ],
+          "max": [
+            -0.9053,
+            2.87,
+            -7.1066
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1071",
+        "name": "rear_hall_open_leaf_-1_door_plank002",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.9193,
+          1.67,
+          -7.4145
+        ],
+        "bounds": {
+          "min": [
+            -0.9976,
+            0.47,
+            -7.5246
+          ],
+          "max": [
+            -0.841,
+            2.87,
+            -7.3045
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1072",
+        "name": "rear_hall_open_leaf_-1_door_plank003",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.855,
+          1.67,
+          -7.6124
+        ],
+        "bounds": {
+          "min": [
+            -0.9333,
+            0.47,
+            -7.7225
+          ],
+          "max": [
+            -0.7767,
+            2.87,
+            -7.5023
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_1073",
+        "name": "rear_hall_open_leaf_-1_door_plank004",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.7908,
+          1.67,
+          -7.8102
+        ],
+        "bounds": {
+          "min": [
+            -0.8691,
+            0.47,
+            -7.9203
+          ],
+          "max": [
+            -0.7125,
+            2.87,
+            -7.7001
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0827
+      },
+      {
+        "id": "mesh_507",
+        "name": "gate_lantern_1_paper_shade",
+        "parent": "Scene",
+        "worldPosition": [
+          1.9,
+          2.49,
+          0.57
+        ],
+        "bounds": {
+          "min": [
+            1.72,
+            2.18,
+            0.39
+          ],
+          "max": [
+            2.08,
+            2.8,
+            0.75
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0804
+      },
+      {
+        "id": "mesh_583",
+        "name": "gate_lantern_-1_paper_shade",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.9,
+          2.49,
+          0.57
+        ],
+        "bounds": {
+          "min": [
+            -2.08,
+            2.18,
+            0.39
+          ],
+          "max": [
+            -1.72,
+            2.8,
+            0.75
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0804
+      },
+      {
+        "id": "mesh_779",
+        "name": "hall_porch_lantern_paper_shade",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          2.84,
+          -6.52
+        ],
+        "bounds": {
+          "min": [
+            -0.18,
+            2.53,
+            -6.7
+          ],
+          "max": [
+            0.18,
+            3.15,
+            -6.34
+          ]
+        },
+        "semanticGroup": "furniture",
+        "volume": 0.0804
+      },
+      {
+        "id": "mesh_85",
+        "name": "corner_pier_stone_cap",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          3.16,
+          0
+        ],
+        "bounds": {
+          "min": [
+            -6.33,
+            3.07,
+            -0.33
+          ],
+          "max": [
+            -5.67,
+            3.25,
+            0.33
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.0784
+      },
+      {
+        "id": "mesh_86",
+        "name": "corner_pier_stone_cap001",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          3.16,
+          -10
+        ],
+        "bounds": {
+          "min": [
+            -6.33,
+            3.07,
+            -10.33
+          ],
+          "max": [
+            -5.67,
+            3.25,
+            -9.67
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.0784
+      },
+      {
+        "id": "mesh_87",
+        "name": "corner_pier_stone_cap002",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          3.16,
+          0
+        ],
+        "bounds": {
+          "min": [
+            5.67,
+            3.07,
+            -0.33
+          ],
+          "max": [
+            6.33,
+            3.25,
+            0.33
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.0784
+      },
+      {
+        "id": "mesh_88",
+        "name": "corner_pier_stone_cap003",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          3.16,
+          -10
+        ],
+        "bounds": {
+          "min": [
+            5.67,
+            3.07,
+            -10.33
+          ],
+          "max": [
+            6.33,
+            3.25,
+            -9.67
+          ]
+        },
+        "semanticGroup": "walls",
+        "volume": 0.0784
+      },
+      {
+        "id": "mesh_655",
+        "name": "gate_visible_rafter",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.66,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -2.6933,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -2.6267,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_656",
+        "name": "gate_visible_rafter001",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.28,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -2.3133,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -2.2467,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_657",
+        "name": "gate_visible_rafter002",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.9,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -1.9333,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -1.8667,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_658",
+        "name": "gate_visible_rafter003",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.52,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -1.5533,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -1.4867,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_659",
+        "name": "gate_visible_rafter004",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.14,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -1.1733,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -1.1067,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_660",
+        "name": "gate_visible_rafter005",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.76,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -0.7933,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -0.7267,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_661",
+        "name": "gate_visible_rafter006",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.38,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -0.4133,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            -0.3467,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_662",
+        "name": "gate_visible_rafter007",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            -0.0333,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            0.0333,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_663",
+        "name": "gate_visible_rafter008",
+        "parent": "Scene",
+        "worldPosition": [
+          0.38,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            0.3467,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            0.4133,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_664",
+        "name": "gate_visible_rafter009",
+        "parent": "Scene",
+        "worldPosition": [
+          0.76,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            0.7267,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            0.7933,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_665",
+        "name": "gate_visible_rafter010",
+        "parent": "Scene",
+        "worldPosition": [
+          1.14,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            1.1067,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            1.1733,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_666",
+        "name": "gate_visible_rafter011",
+        "parent": "Scene",
+        "worldPosition": [
+          1.52,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            1.4867,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            1.5533,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_667",
+        "name": "gate_visible_rafter012",
+        "parent": "Scene",
+        "worldPosition": [
+          1.9,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            1.8667,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            1.9333,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_668",
+        "name": "gate_visible_rafter013",
+        "parent": "Scene",
+        "worldPosition": [
+          2.28,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            2.2467,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            2.3133,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_669",
+        "name": "gate_visible_rafter014",
+        "parent": "Scene",
+        "worldPosition": [
+          2.66,
+          3.7,
+          0.58
+        ],
+        "bounds": {
+          "min": [
+            2.6267,
+            3.281,
+            -0.0195
+          ],
+          "max": [
+            2.6933,
+            4.119,
+            1.1795
+          ]
+        },
+        "semanticGroup": "roof",
+        "volume": 0.0669
+      },
+      {
+        "id": "mesh_785",
+        "name": "hall_window_1_dark_recess",
+        "parent": "Scene",
+        "worldPosition": [
+          2.25,
+          2.09,
+          -6.69
+        ],
+        "bounds": {
+          "min": [
+            1.83,
+            1.67,
+            -6.7275
+          ],
+          "max": [
+            2.67,
+            2.51,
+            -6.6525
+          ]
+        },
+        "semanticGroup": "windows",
+        "volume": 0.0529
+      },
+      {
+        "id": "mesh_796",
+        "name": "hall_window_-1_dark_recess",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.25,
+          2.09,
+          -6.69
+        ],
+        "bounds": {
+          "min": [
+            -2.67,
+            1.67,
+            -6.7275
+          ],
+          "max": [
+            -1.83,
+            2.51,
+            -6.6525
+          ]
+        },
+        "semanticGroup": "windows",
+        "volume": 0.0529
+      },
+      {
+        "id": "mesh_670",
+        "name": "gate_window_1_dark_recess",
+        "parent": "Scene",
+        "worldPosition": [
+          2.07,
+          1.89,
+          0.235
+        ],
+        "bounds": {
+          "min": [
+            1.66,
+            1.48,
+            0.1975
+          ],
+          "max": [
+            2.48,
+            2.3,
+            0.2725
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0504
+      },
+      {
+        "id": "mesh_681",
+        "name": "gate_window_-1_dark_recess",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.07,
+          1.89,
+          0.235
+        ],
+        "bounds": {
+          "min": [
+            -2.48,
+            1.48,
+            0.1975
+          ],
+          "max": [
+            -1.66,
+            2.3,
+            0.2725
+          ]
+        },
+        "semanticGroup": "gate",
+        "volume": 0.0504
+      },
+      {
+        "id": "mesh_0",
+        "name": "approach_paver_00_00",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -6.3635,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -5.6365,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_1",
+        "name": "approach_paver_00_01",
+        "parent": "Scene",
+        "worldPosition": [
+          -5.25,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -5.6135,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -4.8865,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_2",
+        "name": "approach_paver_00_02",
+        "parent": "Scene",
+        "worldPosition": [
+          -4.5,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -4.8635,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -4.1365,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_3",
+        "name": "approach_paver_00_03",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.75,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -4.1135,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -3.3865,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_4",
+        "name": "approach_paver_00_04",
+        "parent": "Scene",
+        "worldPosition": [
+          -3,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -3.3635,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -2.6365,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_5",
+        "name": "approach_paver_00_05",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.25,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -2.6135,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -1.8865,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_6",
+        "name": "approach_paver_00_06",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.5,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -1.8635,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -1.1365,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_7",
+        "name": "approach_paver_00_07",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.75,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -1.1135,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            -0.3865,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_8",
+        "name": "approach_paver_00_08",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            -0.3635,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            0.3635,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_9",
+        "name": "approach_paver_00_09",
+        "parent": "Scene",
+        "worldPosition": [
+          0.75,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            0.3865,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            1.1135,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_10",
+        "name": "approach_paver_00_10",
+        "parent": "Scene",
+        "worldPosition": [
+          1.5,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            1.1365,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            1.8635,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_11",
+        "name": "approach_paver_00_11",
+        "parent": "Scene",
+        "worldPosition": [
+          2.25,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            1.8865,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            2.6135,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_12",
+        "name": "approach_paver_00_12",
+        "parent": "Scene",
+        "worldPosition": [
+          3,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            2.6365,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            3.3635,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_13",
+        "name": "approach_paver_00_13",
+        "parent": "Scene",
+        "worldPosition": [
+          3.75,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            3.3865,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            4.1135,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_14",
+        "name": "approach_paver_00_14",
+        "parent": "Scene",
+        "worldPosition": [
+          4.5,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            4.1365,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            4.8635,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_15",
+        "name": "approach_paver_00_15",
+        "parent": "Scene",
+        "worldPosition": [
+          5.25,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            4.8865,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            5.6135,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_16",
+        "name": "approach_paver_00_16",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          -0.005,
+          3.75
+        ],
+        "bounds": {
+          "min": [
+            5.6365,
+            -0.0525,
+            3.397
+          ],
+          "max": [
+            6.3635,
+            0.0425,
+            4.103
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_17",
+        "name": "approach_paver_01_00",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -6.3635,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -5.6365,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_18",
+        "name": "approach_paver_01_01",
+        "parent": "Scene",
+        "worldPosition": [
+          -5.25,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -5.6135,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -4.8865,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_19",
+        "name": "approach_paver_01_02",
+        "parent": "Scene",
+        "worldPosition": [
+          -4.5,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -4.8635,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -4.1365,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_20",
+        "name": "approach_paver_01_03",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.75,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -4.1135,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -3.3865,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_21",
+        "name": "approach_paver_01_04",
+        "parent": "Scene",
+        "worldPosition": [
+          -3,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -3.3635,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -2.6365,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_22",
+        "name": "approach_paver_01_05",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.25,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -2.6135,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -1.8865,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_23",
+        "name": "approach_paver_01_06",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.5,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -1.8635,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -1.1365,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_24",
+        "name": "approach_paver_01_07",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.75,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -1.1135,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            -0.3865,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_25",
+        "name": "approach_paver_01_08",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            -0.3635,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            0.3635,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_26",
+        "name": "approach_paver_01_09",
+        "parent": "Scene",
+        "worldPosition": [
+          0.75,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            0.3865,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            1.1135,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_27",
+        "name": "approach_paver_01_10",
+        "parent": "Scene",
+        "worldPosition": [
+          1.5,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            1.1365,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            1.8635,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_28",
+        "name": "approach_paver_01_11",
+        "parent": "Scene",
+        "worldPosition": [
+          2.25,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            1.8865,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            2.6135,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_29",
+        "name": "approach_paver_01_12",
+        "parent": "Scene",
+        "worldPosition": [
+          3,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            2.6365,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            3.3635,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_30",
+        "name": "approach_paver_01_13",
+        "parent": "Scene",
+        "worldPosition": [
+          3.75,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            3.3865,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            4.1135,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_31",
+        "name": "approach_paver_01_14",
+        "parent": "Scene",
+        "worldPosition": [
+          4.5,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            4.1365,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            4.8635,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_32",
+        "name": "approach_paver_01_15",
+        "parent": "Scene",
+        "worldPosition": [
+          5.25,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            4.8865,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            5.6135,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_33",
+        "name": "approach_paver_01_16",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          -0.005,
+          3.02
+        ],
+        "bounds": {
+          "min": [
+            5.6365,
+            -0.0525,
+            2.667
+          ],
+          "max": [
+            6.3635,
+            0.0425,
+            3.373
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_34",
+        "name": "approach_paver_02_00",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -6.3635,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -5.6365,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_35",
+        "name": "approach_paver_02_01",
+        "parent": "Scene",
+        "worldPosition": [
+          -5.25,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -5.6135,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -4.8865,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_36",
+        "name": "approach_paver_02_02",
+        "parent": "Scene",
+        "worldPosition": [
+          -4.5,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -4.8635,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -4.1365,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_37",
+        "name": "approach_paver_02_03",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.75,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -4.1135,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -3.3865,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_38",
+        "name": "approach_paver_02_04",
+        "parent": "Scene",
+        "worldPosition": [
+          -3,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -3.3635,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -2.6365,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_39",
+        "name": "approach_paver_02_05",
+        "parent": "Scene",
+        "worldPosition": [
+          -2.25,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -2.6135,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -1.8865,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_40",
+        "name": "approach_paver_02_06",
+        "parent": "Scene",
+        "worldPosition": [
+          -1.5,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -1.8635,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -1.1365,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_41",
+        "name": "approach_paver_02_07",
+        "parent": "Scene",
+        "worldPosition": [
+          -0.75,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -1.1135,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            -0.3865,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_42",
+        "name": "approach_paver_02_08",
+        "parent": "Scene",
+        "worldPosition": [
+          0,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            -0.3635,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            0.3635,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_43",
+        "name": "approach_paver_02_09",
+        "parent": "Scene",
+        "worldPosition": [
+          0.75,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            0.3865,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            1.1135,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_44",
+        "name": "approach_paver_02_10",
+        "parent": "Scene",
+        "worldPosition": [
+          1.5,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            1.1365,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            1.8635,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_45",
+        "name": "approach_paver_02_11",
+        "parent": "Scene",
+        "worldPosition": [
+          2.25,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            1.8865,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            2.6135,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_46",
+        "name": "approach_paver_02_12",
+        "parent": "Scene",
+        "worldPosition": [
+          3,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            2.6365,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            3.3635,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_47",
+        "name": "approach_paver_02_13",
+        "parent": "Scene",
+        "worldPosition": [
+          3.75,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            3.3865,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            4.1135,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_48",
+        "name": "approach_paver_02_14",
+        "parent": "Scene",
+        "worldPosition": [
+          4.5,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            4.1365,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            4.8635,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_49",
+        "name": "approach_paver_02_15",
+        "parent": "Scene",
+        "worldPosition": [
+          5.25,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            4.8865,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            5.6135,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_50",
+        "name": "approach_paver_02_16",
+        "parent": "Scene",
+        "worldPosition": [
+          6,
+          -0.005,
+          2.29
+        ],
+        "bounds": {
+          "min": [
+            5.6365,
+            -0.0525,
+            1.937
+          ],
+          "max": [
+            6.3635,
+            0.0425,
+            2.643
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_51",
+        "name": "approach_paver_03_00",
+        "parent": "Scene",
+        "worldPosition": [
+          -6,
+          -0.005,
+          1.56
+        ],
+        "bounds": {
+          "min": [
+            -6.3635,
+            -0.0525,
+            1.207
+          ],
+          "max": [
+            -5.6365,
+            0.0425,
+            1.913
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_52",
+        "name": "approach_paver_03_01",
+        "parent": "Scene",
+        "worldPosition": [
+          -5.25,
+          -0.005,
+          1.56
+        ],
+        "bounds": {
+          "min": [
+            -5.6135,
+            -0.0525,
+            1.207
+          ],
+          "max": [
+            -4.8865,
+            0.0425,
+            1.913
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_53",
+        "name": "approach_paver_03_02",
+        "parent": "Scene",
+        "worldPosition": [
+          -4.5,
+          -0.005,
+          1.56
+        ],
+        "bounds": {
+          "min": [
+            -4.8635,
+            -0.0525,
+            1.207
+          ],
+          "max": [
+            -4.1365,
+            0.0425,
+            1.913
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_54",
+        "name": "approach_paver_03_03",
+        "parent": "Scene",
+        "worldPosition": [
+          -3.75,
+          -0.005,
+          1.56
+        ],
+        "bounds": {
+          "min": [
+            -4.1135,
+            -0.0525,
+            1.207
+          ],
+          "max": [
+            -3.3865,
+            0.0425,
+            1.913
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      },
+      {
+        "id": "mesh_55",
+        "name": "approach_paver_03_04",
+        "parent": "Scene",
+        "worldPosition": [
+          -3,
+          -0.005,
+          1.56
+        ],
+        "bounds": {
+          "min": [
+            -3.3635,
+            -0.0525,
+            1.207
+          ],
+          "max": [
+            -2.6365,
+            0.0425,
+            1.913
+          ]
+        },
+        "semanticGroup": "approach",
+        "volume": 0.0488
+      }
+    ],
+    "nextOffset": 200,
+    "hint": "还有 874 个网格未返回；用 meshOffset=200 继续，或用 meshQuery / meshGroup 缩小范围。"
+  },
+  "obstacleHints": [
+    {
+      "name": "corner_wall_pier",
+      "bounds": {
+        "min": [
+          -6.26,
+          0.34,
+          -0.26
+        ],
+        "max": [
+          -5.74,
+          3.09,
+          0.26
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "corner_wall_pier001",
+      "bounds": {
+        "min": [
+          -6.26,
+          0.34,
+          -10.26
+        ],
+        "max": [
+          -5.74,
+          3.09,
+          -9.74
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "corner_wall_pier002",
+      "bounds": {
+        "min": [
+          5.74,
+          0.34,
+          -0.26
+        ],
+        "max": [
+          6.26,
+          3.09,
+          0.26
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "corner_wall_pier003",
+      "bounds": {
+        "min": [
+          5.74,
+          0.34,
+          -10.26
+        ],
+        "max": [
+          6.26,
+          3.09,
+          -9.74
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_column_stone_foot",
+      "bounds": {
+        "min": [
+          -1.67,
+          0.44,
+          0.03
+        ],
+        "max": [
+          -1.33,
+          0.64,
+          0.55
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_column_stone_foot001",
+      "bounds": {
+        "min": [
+          -3.07,
+          0.44,
+          0.03
+        ],
+        "max": [
+          -2.73,
+          0.64,
+          0.55
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_column_stone_foot002",
+      "bounds": {
+        "min": [
+          1.33,
+          0.44,
+          0.03
+        ],
+        "max": [
+          1.67,
+          0.64,
+          0.55
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_column_stone_foot003",
+      "bounds": {
+        "min": [
+          2.73,
+          0.44,
+          0.03
+        ],
+        "max": [
+          3.07,
+          0.64,
+          0.55
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_timber_column",
+      "bounds": {
+        "min": [
+          -1.6,
+          0.52,
+          0.17
+        ],
+        "max": [
+          -1.4,
+          3.3,
+          0.41
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_timber_column001",
+      "bounds": {
+        "min": [
+          -3,
+          0.52,
+          0.17
+        ],
+        "max": [
+          -2.8,
+          3.3,
+          0.41
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_timber_column002",
+      "bounds": {
+        "min": [
+          1.4,
+          0.52,
+          0.17
+        ],
+        "max": [
+          1.6,
+          3.3,
+          0.41
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "gate_timber_column003",
+      "bounds": {
+        "min": [
+          2.8,
+          0.52,
+          0.17
+        ],
+        "max": [
+          3,
+          3.3,
+          0.41
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_front_panel_1",
+      "bounds": {
+        "min": [
+          1.08,
+          0.565,
+          -7.02
+        ],
+        "max": [
+          3.36,
+          3.415,
+          -6.72
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_front_panel_-1",
+      "bounds": {
+        "min": [
+          -3.36,
+          0.565,
+          -7.02
+        ],
+        "max": [
+          -1.08,
+          3.415,
+          -6.72
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.61,
+          -6.63
+        ],
+        "max": [
+          -1.035,
+          3.37,
+          -6.39
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column_foot",
+      "bounds": {
+        "min": [
+          -1.285,
+          0.52,
+          -6.7
+        ],
+        "max": [
+          -0.975,
+          0.74,
+          -6.32
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column_foot001",
+      "bounds": {
+        "min": [
+          -3.405,
+          0.52,
+          -6.7
+        ],
+        "max": [
+          -3.095,
+          0.74,
+          -6.32
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column_foot002",
+      "bounds": {
+        "min": [
+          0.975,
+          0.52,
+          -6.7
+        ],
+        "max": [
+          1.285,
+          0.74,
+          -6.32
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column_foot003",
+      "bounds": {
+        "min": [
+          3.095,
+          0.52,
+          -6.7
+        ],
+        "max": [
+          3.405,
+          0.74,
+          -6.32
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column001",
+      "bounds": {
+        "min": [
+          -3.345,
+          0.61,
+          -6.63
+        ],
+        "max": [
+          -3.155,
+          3.37,
+          -6.39
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column002",
+      "bounds": {
+        "min": [
+          1.035,
+          0.61,
+          -6.63
+        ],
+        "max": [
+          1.225,
+          3.37,
+          -6.39
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_porch_column003",
+      "bounds": {
+        "min": [
+          3.155,
+          0.61,
+          -6.63
+        ],
+        "max": [
+          3.345,
+          3.37,
+          -6.39
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_rear_wall",
+      "bounds": {
+        "min": [
+          -3.4,
+          0.565,
+          -9.97
+        ],
+        "max": [
+          3.4,
+          3.415,
+          -9.67
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_side_wall_1",
+      "bounds": {
+        "min": [
+          3.1,
+          0.565,
+          -9.97
+        ],
+        "max": [
+          3.4,
+          3.415,
+          -6.87
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "hall_side_wall_-1",
+      "bounds": {
+        "min": [
+          -3.4,
+          0.565,
+          -9.97
+        ],
+        "max": [
+          -3.1,
+          3.415,
+          -6.87
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "rear_boundary_wall",
+      "bounds": {
+        "min": [
+          -6,
+          0.44,
+          -10.18
+        ],
+        "max": [
+          6,
+          2.99,
+          -9.82
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "side_wall_plaster_1",
+      "bounds": {
+        "min": [
+          5.82,
+          0.44,
+          -10
+        ],
+        "max": [
+          6.18,
+          2.99,
+          0
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "side_wall_plaster_-1",
+      "bounds": {
+        "min": [
+          -6.18,
+          0.44,
+          -10
+        ],
+        "max": [
+          -5.82,
+          2.99,
+          0
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss",
+      "bounds": {
+        "min": [
+          -5.4663,
+          0.463,
+          -7.682
+        ],
+        "max": [
+          -5.3152,
+          0.517,
+          -7.5383
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss001",
+      "bounds": {
+        "min": [
+          -5.566,
+          0.4669,
+          -4.1539
+        ],
+        "max": [
+          -5.4371,
+          0.5131,
+          -4.0313
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss002",
+      "bounds": {
+        "min": [
+          -5.6784,
+          0.4468,
+          -5.9681
+        ],
+        "max": [
+          -5.4371,
+          0.5332,
+          -5.7386
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss003",
+      "bounds": {
+        "min": [
+          -5.6277,
+          0.4489,
+          -4.2753
+        ],
+        "max": [
+          -5.3981,
+          0.5311,
+          -4.0568
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss004",
+      "bounds": {
+        "min": [
+          -5.3798,
+          0.4589,
+          -4.7402
+        ],
+        "max": [
+          -5.2062,
+          0.5211,
+          -4.575
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss005",
+      "bounds": {
+        "min": [
+          -5.4375,
+          0.4399,
+          -3.344
+        ],
+        "max": [
+          -5.1573,
+          0.5401,
+          -3.0776
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss006",
+      "bounds": {
+        "min": [
+          -5.5109,
+          0.4524,
+          -1.3212
+        ],
+        "max": [
+          -5.3006,
+          0.5276,
+          -1.1211
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss007",
+      "bounds": {
+        "min": [
+          -5.4855,
+          0.4564,
+          -3.7463
+        ],
+        "max": [
+          -5.2977,
+          0.5236,
+          -3.5677
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss008",
+      "bounds": {
+        "min": [
+          -5.3632,
+          0.4598,
+          -4.8716
+        ],
+        "max": [
+          -5.1941,
+          0.5202,
+          -4.7108
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss009",
+      "bounds": {
+        "min": [
+          -5.3914,
+          0.4641,
+          -6.4029
+        ],
+        "max": [
+          -5.2468,
+          0.5159,
+          -6.2655
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss010",
+      "bounds": {
+        "min": [
+          -5.6604,
+          0.452,
+          -7.5398
+        ],
+        "max": [
+          -5.4477,
+          0.528,
+          -7.3375
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss011",
+      "bounds": {
+        "min": [
+          -5.5636,
+          0.4605,
+          -8.3929
+        ],
+        "max": [
+          -5.3989,
+          0.5195,
+          -8.2363
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss012",
+      "bounds": {
+        "min": [
+          -5.3946,
+          0.4478,
+          -0.7747
+        ],
+        "max": [
+          -5.1587,
+          0.5322,
+          -0.5504
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss013",
+      "bounds": {
+        "min": [
+          -5.5401,
+          0.4546,
+          -1.8872
+        ],
+        "max": [
+          -5.3424,
+          0.5254,
+          -1.6992
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss014",
+      "bounds": {
+        "min": [
+          -5.4633,
+          0.4579,
+          -1.8021
+        ],
+        "max": [
+          -5.2836,
+          0.5221,
+          -1.6312
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss015",
+      "bounds": {
+        "min": [
+          -5.575,
+          0.4466,
+          -4.931
+        ],
+        "max": [
+          -5.3324,
+          0.5334,
+          -4.7003
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss016",
+      "bounds": {
+        "min": [
+          -5.3416,
+          0.459,
+          -5.0649
+        ],
+        "max": [
+          -5.1682,
+          0.521,
+          -4.9
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss017",
+      "bounds": {
+        "min": [
+          -5.425,
+          0.4676,
+          -1.6704
+        ],
+        "max": [
+          -5.2996,
+          0.5124,
+          -1.5511
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss018",
+      "bounds": {
+        "min": [
+          -5.5971,
+          0.4508,
+          -2.1033
+        ],
+        "max": [
+          -5.3778,
+          0.5292,
+          -1.8947
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss019",
+      "bounds": {
+        "min": [
+          -5.4311,
+          0.4469,
+          -5.0052
+        ],
+        "max": [
+          -5.1901,
+          0.5331,
+          -4.776
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss020",
+      "bounds": {
+        "min": [
+          -5.4086,
+          0.4454,
+          -4.3602
+        ],
+        "max": [
+          -5.1595,
+          0.5346,
+          -4.1233
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss021",
+      "bounds": {
+        "min": [
+          -5.4603,
+          0.4472,
+          -4.8502
+        ],
+        "max": [
+          -5.2209,
+          0.5328,
+          -4.6225
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss022",
+      "bounds": {
+        "min": [
+          -5.3946,
+          0.4661,
+          -2.1696
+        ],
+        "max": [
+          -5.2611,
+          0.5139,
+          -2.0426
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss023",
+      "bounds": {
+        "min": [
+          -5.3507,
+          0.4584,
+          -9.7424
+        ],
+        "max": [
+          -5.1742,
+          0.5216,
+          -9.5746
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss024",
+      "bounds": {
+        "min": [
+          5.4497,
+          0.45,
+          -6.422
+        ],
+        "max": [
+          5.6732,
+          0.53,
+          -6.2094
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss025",
+      "bounds": {
+        "min": [
+          5.1829,
+          0.4412,
+          -8.0321
+        ],
+        "max": [
+          5.4557,
+          0.5388,
+          -7.7727
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss026",
+      "bounds": {
+        "min": [
+          5.3482,
+          0.4407,
+          -7.786
+        ],
+        "max": [
+          5.6235,
+          0.5393,
+          -7.5241
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss027",
+      "bounds": {
+        "min": [
+          5.3806,
+          0.4627,
+          -5.6848
+        ],
+        "max": [
+          5.5334,
+          0.5173,
+          -5.5396
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss028",
+      "bounds": {
+        "min": [
+          5.3377,
+          0.4631,
+          -1.4206
+        ],
+        "max": [
+          5.4878,
+          0.5169,
+          -1.2778
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss029",
+      "bounds": {
+        "min": [
+          5.3995,
+          0.4658,
+          -5.1381
+        ],
+        "max": [
+          5.5349,
+          0.5142,
+          -5.0093
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss030",
+      "bounds": {
+        "min": [
+          5.3264,
+          0.4418,
+          -1.5217
+        ],
+        "max": [
+          5.596,
+          0.5382,
+          -1.2653
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss031",
+      "bounds": {
+        "min": [
+          5.3477,
+          0.4533,
+          -9.7567
+        ],
+        "max": [
+          5.5529,
+          0.5267,
+          -9.5616
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss032",
+      "bounds": {
+        "min": [
+          5.3314,
+          0.4654,
+          -7.3928
+        ],
+        "max": [
+          5.4692,
+          0.5146,
+          -7.2617
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss033",
+      "bounds": {
+        "min": [
+          5.3967,
+          0.4405,
+          -6.1779
+        ],
+        "max": [
+          5.6736,
+          0.5395,
+          -5.9145
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss034",
+      "bounds": {
+        "min": [
+          5.4759,
+          0.45,
+          -7.5295
+        ],
+        "max": [
+          5.6995,
+          0.53,
+          -7.3169
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss035",
+      "bounds": {
+        "min": [
+          5.1856,
+          0.4396,
+          -6.9811
+        ],
+        "max": [
+          5.4675,
+          0.5404,
+          -6.713
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss036",
+      "bounds": {
+        "min": [
+          5.4976,
+          0.4615,
+          -8.3147
+        ],
+        "max": [
+          5.6567,
+          0.5185,
+          -8.1634
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss037",
+      "bounds": {
+        "min": [
+          5.5184,
+          0.4624,
+          -2.2467
+        ],
+        "max": [
+          5.6726,
+          0.5176,
+          -2.1001
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss038",
+      "bounds": {
+        "min": [
+          5.4344,
+          0.4395,
+          -9.618
+        ],
+        "max": [
+          5.7165,
+          0.5405,
+          -9.3496
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss039",
+      "bounds": {
+        "min": [
+          5.4502,
+          0.4634,
+          -7.5906
+        ],
+        "max": [
+          5.5987,
+          0.5166,
+          -7.4494
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss040",
+      "bounds": {
+        "min": [
+          5.4161,
+          0.4631,
+          -2.0907
+        ],
+        "max": [
+          5.5662,
+          0.5169,
+          -1.9479
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss041",
+      "bounds": {
+        "min": [
+          5.3491,
+          0.4643,
+          -6.1143
+        ],
+        "max": [
+          5.4926,
+          0.5157,
+          -5.9779
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss042",
+      "bounds": {
+        "min": [
+          5.2819,
+          0.4559,
+          -7.7341
+        ],
+        "max": [
+          5.4723,
+          0.5241,
+          -7.553
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss043",
+      "bounds": {
+        "min": [
+          5.2072,
+          0.4459,
+          -4.3156
+        ],
+        "max": [
+          5.4535,
+          0.5341,
+          -4.0813
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss044",
+      "bounds": {
+        "min": [
+          5.4999,
+          0.4634,
+          -0.9033
+        ],
+        "max": [
+          5.6485,
+          0.5166,
+          -0.7619
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss045",
+      "bounds": {
+        "min": [
+          5.393,
+          0.4499,
+          -7.6417
+        ],
+        "max": [
+          5.617,
+          0.5301,
+          -7.4287
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss046",
+      "bounds": {
+        "min": [
+          5.2435,
+          0.4625,
+          -8.7193
+        ],
+        "max": [
+          5.3971,
+          0.5175,
+          -8.5732
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    },
+    {
+      "name": "wall_base_moss047",
+      "bounds": {
+        "min": [
+          5.4335,
+          0.4649,
+          -7.2918
+        ],
+        "max": [
+          5.5737,
+          0.5151,
+          -7.1584
+        ]
+      },
+      "approximation": "单个命名墙体或立柱的轴对齐包围盒，可能高估占据范围，不是完整碰撞地图。"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "gate_center",
+      "name": "门洞中心",
+      "position": [
+        0,
+        1.5,
+        0
+      ]
+    },
+    {
+      "id": "reception",
+      "name": "接待区",
+      "position": [
+        0.35,
+        0.43,
+        -3.6
+      ]
+    },
+    {
+      "id": "steps",
+      "name": "台阶前",
+      "position": [
+        0,
+        0.15,
+        1.7
+      ]
+    }
+  ],
+  "actors": [
+    {
+      "id": "CHAR_DINGXIAN",
+      "name": "丁显",
+      "color": "#b96555",
+      "height": 1.76,
+      "position": [
+        -1,
+        0.43,
+        -3.1
+      ],
+      "facing": 90
+    },
+    {
+      "id": "CHAR_ABBOT",
+      "name": "住持",
+      "color": "#bda779",
+      "height": 1.67,
+      "position": [
+        1.1,
+        0.43,
+        -3.7
+      ],
+      "facing": -90
+    },
+    {
+      "id": "CHAR_QINGRAN",
+      "name": "清然",
+      "color": "#7f9d9d",
+      "height": 1.53,
+      "position": [
+        0.2,
+        0.43,
+        -4.9
+      ],
+      "facing": -40
+    }
+  ],
+  "shots": [
+    {
+      "id": "Q3_S4_M1",
+      "groupId": "Q3_S4",
+      "title": "跨门报喜",
+      "action": "寺门内同轴中景，开场直接取丁显跨门将结束的动作片段、站定，对住持完整说Q3_D3；不另留一秒走路等待。清然抱匾左前景，住持看他，随从箱笼留门外。",
+      "sceneId": "LOC_GATE",
+      "cast": [
+        "CHAR_DINGXIAN",
+        "CHAR_QINGRAN",
+        "CHAR_ABBOT"
+      ],
+      "duration": 5,
+      "sourceRange": [
+        83,
+        88
+      ],
+      "motionPolicy": "static",
+      "cameraId": "CAM_GATE_A",
+      "blocking": {
+        "CHAR_DINGXIAN": [
+          {
+            "t": 0,
+            "position": [
+              -1,
+              0.43,
+              -2.4
+            ]
+          },
+          {
+            "t": 0.18,
+            "position": [
+              -1,
+              0.43,
+              -3.1
+            ]
+          },
+          {
+            "t": 1,
+            "position": [
+              -1,
+              0.43,
+              -3.1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "Q3_S4_M2",
+      "groupId": "Q3_S4",
+      "title": "行揖收束",
+      "action": "接同轴同站位，丁显说完双手合起，取行揖收束动作，末帧揖最低点；住持等他直身，不提前指路。原速，不拉长鞠躬停留。",
+      "sceneId": "LOC_GATE",
+      "cast": [
+        "CHAR_DINGXIAN",
+        "CHAR_QINGRAN",
+        "CHAR_ABBOT"
+      ],
+      "duration": 1,
+      "sourceRange": [
+        88,
+        89
+      ],
+      "motionPolicy": "static",
+      "cameraId": "CAM_GATE_A",
+      "blocking": {}
+    },
+    {
+      "id": "Q4_S1_M1",
+      "groupId": "Q4_S1",
+      "title": "住持答话，示意引路",
+      "action": "同一寺门院廊、同轴站位与春日光线。丁显从揖中直身，住持完整说Q4_D1，答完才示意引路；清然抱匾、门外随从均维持位置。",
+      "sceneId": "LOC_GATE",
+      "cast": [
+        "CHAR_DINGXIAN",
+        "CHAR_QINGRAN",
+        "CHAR_ABBOT"
+      ],
+      "duration": 6,
+      "sourceRange": [
+        89,
+        95
+      ],
+      "motionPolicy": "static",
+      "cameraId": "CAM_GATE_A",
+      "blocking": {}
+    }
+  ],
+  "cameras": [
+    {
+      "id": "CAM_GATE_A",
+      "name": "A · 山门接待",
+      "locked": false,
+      "mode": "static",
+      "keyframes": [
+        {
+          "t": 0,
+          "position": [
+            -2.8,
+            2.15,
+            -6.15
+          ],
+          "target": [
+            0.35,
+            1.25,
+            -3.6
+          ],
+          "fov": 37.29907750810282
+        }
+      ]
+    },
+    {
+      "id": "CAM_GATE_B",
+      "name": "B · 广角备选",
+      "locked": false,
+      "mode": "static",
+      "keyframes": [
+        {
+          "t": 0,
+          "position": [
+            -3.9,
+            2.65,
+            -6.1
+          ],
+          "target": [
+            0.35,
+            1.1,
+            -3.6
+          ],
+          "fov": 45.74733038125343
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    "语义分组由模型名称规则推断，请人工校正。",
+    "示例尺寸；请按实际拍摄需求确认",
+    "人物为占位模型，走位不表示精细表演。",
+    "未提供可行走区域或完整碰撞网格，AI 候选轨迹必须回到网站检查。"
+  ],
+  "outputContract": {
+    "type": "previzcam.camera-plan",
+    "version": 1,
+    "sceneId": "LOC_GATE",
+    "cameras": [
+      {
+        "id": "CAM_NEW",
+        "name": "新机位",
+        "mode": "static",
+        "locked": false,
+        "keyframes": [
+          {
+            "t": 0,
+            "position": [
+              -2.8,
+              2.15,
+              -6.15
+            ],
+            "target": [
+              0.35,
+              1.25,
+              -3.6
+            ],
+            "fov": 37.29907750810282
+          }
+        ]
+      }
+    ],
+    "assignments": [
+      {
+        "shotId": "Q3_S4_M1",
+        "cameraId": "CAM_NEW"
+      },
+      {
+        "shotId": "Q3_S4_M2",
+        "cameraId": "CAM_NEW"
+      },
+      {
+        "shotId": "Q4_S1_M1",
+        "cameraId": "CAM_NEW"
+      }
+    ]
+  }
+}

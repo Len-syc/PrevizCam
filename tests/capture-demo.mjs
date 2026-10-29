@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const require = createRequire(process.env.PLAYWRIGHT_PACKAGE || 'playwright/package.json');
+const { chromium } = require('playwright');
+const root = fileURLToPath(new URL('../examples/', import.meta.url)); await mkdir(root, { recursive: true });
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 960 }, acceptDownloads: true });
+const errors = []; page.on('pageerror', e => errors.push(e.message));
+const save = async (selector, name) => { const p = page.waitForEvent('download'); await page.locator(selector).click(); await (await p).saveAs(`${root}/${name}`); };
+try {
+  await page.goto('http://127.0.0.1:8899/'); await page.waitForSelector('body[data-ready=true]');
+  await page.locator('#validate').click(); await page.waitForFunction(() => document.getElementById('dialog-body').textContent.includes('暂不检查'));
+  assert.equal(await page.locator('.check-result.error').count(), 0);
+  const checks = await page.locator('#dialog-body').innerText(); await page.locator('#dialog-close').click();
+  await page.locator('#scrubber').evaluate(el => { el.value = 11.9; el.dispatchEvent(new Event('input', { bubbles: true })); });
+  await page.locator('#play').click(); await page.waitForFunction(() => document.getElementById('playhead-time').textContent === '00:12:00');
+  assert.equal(await page.locator('#camera-name').isDisabled(), false);
+  await page.locator('#scrubber').evaluate(el => { el.value = 0; el.dispatchEvent(new Event('input', { bubbles: true })); });
+  await page.locator('#open-ai').click(); await save('#export-spatial', 'scene-context.json'); await save('#download-prompt', 'camera-planning-task.txt');
+  await page.locator('#fill-plan-example').click(); await writeFile(`${root}/camera-plan.json`, await page.locator('#ai-plan').inputValue());
+  const spatial = JSON.parse(await readFile(`${root}/scene-context.json`, 'utf8'));
+  assert.equal(spatial.coordinates.up, '+Y'); assert.equal(spatial.format.fps, 24); assert.equal(spatial.shots.length, 3); assert.ok(spatial.obstacleHints.length > 0);
+  await page.locator('#dialog-close').click(); await save('#snapshot', 'shot-start.png');
+  await page.screenshot({ path: `${root}/workbench.png`, fullPage: true });
+  await page.setViewportSize({ width: 390, height: 900 }); assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+  await page.screenshot({ path: `${root}/mobile.png`, fullPage: true });
+  assert.deepEqual(errors, []);
+  console.log(JSON.stringify({ autoEndEditable: true, errors, spatialGroups: spatial.objects.length, obstacleHints: spatial.obstacleHints.length, checks, examples: root }, null, 2));
+} finally { await browser.close(); }

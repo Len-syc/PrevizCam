@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>draw3d · 3D 绘图编辑器</title>
+<link rel="stylesheet" href="index.css">
+<script type="importmap">
+  { "imports": {
+    "three": "./vendor/three.module.js",
+    "three-mesh-bvh": "./vendor/libs/three-mesh-bvh.module.js"
+  } }
+</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+      <span>3D 绘图编辑器</span>
+    </div>
+    <div class="topbar-group">
+      <button class="btn btn-icon" id="btn-undo" data-tip="撤销 (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+      <button class="btn btn-icon" id="btn-redo" data-tip="重做 (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+      <button class="btn btn-icon" id="btn-duplicate" data-tip="复制选中 (Ctrl+D)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      <button class="btn btn-icon" id="btn-mirror" data-tip="镜像复制：副本与原物体保持内容一致（形状/颜色/涂画等实时同步，仅位置独立）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="7" height="10" rx="1"/><rect x="15" y="7" width="7" height="10" rx="1"/><path d="M9 12h6"/><path d="M13 10l2 2-2 2"/></svg></button>
+      <button class="btn btn-icon" id="btn-delete" data-tip="删除选中 (Del)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      <button class="btn btn-icon" id="btn-clear" data-tip="清空场景"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M6 8v12h12V8"/><line x1="10" y1="12" x2="14" y2="16"/><line x1="14" y1="12" x2="10" y2="16"/></svg></button>
+    </div>
+    <div class="topbar-group">
+      <span class="group-label">项目</span>
+      <button class="btn btn-sm" id="btn-project-save">导出项目</button>
+      <button class="btn btn-sm" id="btn-project-open">导入项目</button>
+      <button class="btn btn-sm" id="btn-script" data-tip="脚本模式：轻编程批量创建/移动物体">脚本</button>
+    </div>
+    <div class="topbar-group">
+      <span class="group-label">导出模型</span>
+      <button class="btn btn-sm" id="btn-export-usdz">USDZ</button>
+      <button class="btn btn-sm" id="btn-export-glb">GLB</button>
+      <button class="btn btn-sm" id="btn-export-obj">OBJ</button>
+      <button class="btn btn-sm" id="btn-export-stl">STL</button>
+    </div>
+    <input type="file" id="project-file" accept=".json,.draw3d,application/json" hidden>
+  </header>
+
+  <div class="stage">
+    <aside class="toolbar">
+      <button class="tool active" id="tool-select" data-tip="选择 / 变换 (Q)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3l7.07 17 2.51-7.39L21 10.07z"/></svg></button>
+      <button class="tool" id="tool-marquee" data-tip="框选多选 (B)：拖拽框选 · 点击累加"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></button>
+      <button class="tool" id="tool-face" data-tip="选面 (F)：点击物体的某个面，编辑面颜色/透明度/边框"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M4.2 8.4 12 12.8v8.4l-7.8-4.5z" fill="currentColor" stroke="none" opacity="0.45"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></button>
+      <div class="tool-sep"></div>
+      <button class="tool" data-add="box" data-tip="立方体"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></button>
+      <button class="tool" data-add="sphere" data-tip="球体"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/></svg></button>
+      <button class="tool" data-add="cylinder" data-tip="圆柱"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="7" ry="2.5"/><path d="M5 5v14a7 2.5 0 0 0 14 0V5"/></svg></button>
+      <button class="tool" data-add="cone" data-tip="圆锥"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L5 18.5"/><path d="M12 3l7 15.5"/><ellipse cx="12" cy="18.5" rx="7" ry="2.5"/></svg></button>
+      <button class="tool" data-add="torus" data-tip="圆环"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></button>
+      <button class="tool" data-add="plane" data-tip="平面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-11h12l-6 11z"/></svg></button>
+      <button class="tool" data-add="trough" data-tip="水槽（镂空立方体：可调壁厚/底厚，底厚为 0 则变成四周围墙）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7"/><path d="M3 12h5l2 3h4l2-3h5"/><path d="M3 12l3-7h12l3 7"/></svg></button>
+      <div class="tool-sep"></div>
+      <button class="tool" id="tool-draw" data-tip="绘制轮廓 → 挤出厚度 (D)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg></button>
+      <button class="tool" id="tool-line" data-tip="线条 (L)：点起点、点终点画一根线段；选中后可拖节点、双击线上加节点、双击节点切换折角/平滑、Alt+点节点删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M6.5 17.5L17.5 6.5"/></svg></button>
+      <button class="tool" id="tool-text3d" data-tip="立体文字（有厚度，支持中文）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M9 19h6"/></svg></button>
+      <button class="tool" id="tool-text2d" data-tip="贴面文字（平面贴图，可贴到物体表面）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 10V9h8v1"/><path d="M12 9v6"/><path d="M10.5 15h3"/></svg></button>
+      <div class="tool-sep"></div>
+      <button class="tool" id="mode-translate" data-tip="移动 (W)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg></button>
+      <button class="tool" id="mode-rotate" data-tip="旋转 (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/></svg></button>
+      <button class="tool" id="mode-scale" data-tip="缩放 (R)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3l-7 7"/><path d="M21 9V3h-6"/><rect x="3" y="11" width="10" height="10" rx="2"/></svg></button>
+      <button class="tool" id="toggle-snap" data-tip="吸附开关"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></button>
+    </aside>
+
+    <div id="viewport">
+      <div class="export-frame" id="export-frame"></div>
+      <div class="marquee" id="marquee" hidden></div>
+      <div class="draw-actions" id="draw-actions">
+        <span id="draw-hint">逐点点击画轮廓 · 回车或双击闭合 · Esc 取消</span>
+        <label>厚度 <input type="number" id="draw-depth" value="0.4" min="0.02" max="20" step="0.1"></label>
+        <button class="btn btn-sm btn-primary" id="btn-draw-finish">闭合</button>
+        <button class="btn btn-sm" id="btn-draw-cancel">取消</button>
+      </div>
+      <!-- 画板模式工具条 -->
+      <div class="draw-actions" id="sketch-bar">
+        <span>画板</span>
+        <label title="旋转画布视角（度），决定绘画方向">旋转 <input type="number" id="sketch-rot" value="0" step="15"></label>
+        <label>颜色 <input type="color" id="sketch-color" value="#E42214"></label>
+        <label>粗细 <input type="number" id="sketch-width" value="3" min="1" max="20" step="0.5"></label>
+        <button class="btn btn-sm" id="sketch-mode">自由</button>
+        <button class="btn btn-sm" id="sketch-eraser">橡皮</button>
+        <button class="btn btn-sm" id="sketch-text">文字</button>
+        <label>字号 <input type="number" id="sketch-font" value="26" min="4" max="200" step="1"></label>
+        <input type="text" id="sketch-text-input" placeholder="输入文字，回车放置" hidden>
+        <button class="btn btn-sm" id="sketch-undo">撤销</button>
+        <button class="btn btn-sm" id="sketch-clear">清空此面</button>
+        <button class="btn btn-sm btn-primary" id="sketch-done">完成</button>
+      </div>
+      <!-- 面右键菜单 -->
+      <div class="ctx-menu" id="face-menu" hidden>
+        <button id="menu-sketch">开启画板模式</button>
+      </div>
+      <!-- 视角快切 -->
+      <div class="view-switch" id="view-switch">
+        <button data-view="front" data-tip="正视图（从前方平视）">正</button>
+        <button data-view="side" data-tip="侧视图（从右侧平视）">侧</button>
+        <button data-view="top" data-tip="俯视图（从正上方垂直向下）">顶</button>
+        <button data-view="iso" data-tip="斜 45° 常规视图">45°</button>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="tabs">
+        <button class="tab" data-tab="tab-props">属性</button>
+        <button class="tab" data-tab="tab-layers">图层</button>
+        <button class="tab active" data-tab="tab-scene">动画</button>
+      </div>
+
+      <div class="tab-page" id="tab-props">
+        <div id="prop-empty" class="empty-tip">未选中物体<br>点击场景中的物体进行编辑<br>Shift+点击或框选工具可多选</div>
+
+        <section id="prop-section-ops" hidden>
+          <h2>批量操作</h2>
+          <p class="section-hint" id="multi-count"></p>
+          <div class="field bg-row" id="prop-group-field" hidden>
+            <button class="btn btn-sm btn-primary" id="btn-group-toggle">组合 (Ctrl+G)</button>
+          </div>
+          <div class="field bg-row" id="multi-body" hidden>
+            <button class="btn btn-sm" id="btn-subtract" data-tip="布尔相减：恰好选中 2 个实体时，先选的挖去后选的形状">相减（先选 − 后选）</button>
+          </div>
+          <div class="field" id="align-field" hidden><label title="各轴按包围盒中心，对齐到最后选中">对齐</label>
+            <div class="bg-row">
+              <button class="btn btn-sm" data-align="x">X</button>
+              <button class="btn btn-sm" data-align="z">Y</button>
+              <button class="btn btn-sm" data-align="y">Z</button>
+              <button class="btn btn-sm lock-btn" id="align-lock" data-tip="锁定对齐：锁住后移动任一成员，其余自动跟随保持对齐"></button>
+            </div>
+          </div>
+          <div class="field" id="dist-field" hidden><label title="首尾不动，中间等间距，需 ≥3 个">分布</label>
+            <div class="bg-row">
+              <button class="btn btn-sm" data-dist="x">X</button>
+              <button class="btn btn-sm" data-dist="z">Y</button>
+              <button class="btn btn-sm" data-dist="y">Z</button>
+              <button class="btn btn-sm lock-btn" id="dist-lock" data-tip="锁定分布：移动端点自动重算等距，移动中间整体跟随"></button>
+            </div>
+          </div>
+        </section>
+
+        <div id="prop-body" hidden>
+          <section>
+            <h2>基本信息</h2>
+            <div class="field"><label>名称</label><div id="prop-name" class="static-val"></div></div>
+            <div class="field" id="prop-layer-field"><label title="把选中物体移到某个图层">图层</label>
+              <select id="prop-layer"></select>
+            </div>
+          </section>
+
+          <section>
+            <h2>变换</h2>
+            <div class="field" id="prop-size-field"><label title="长(X) × 宽(Y) × 高(Z，竖直)，整数单位">尺寸</label>
+              <div class="vec-row">
+                <input type="number" id="prop-size-x" step="1" min="2" title="长（X）">
+                <input type="number" id="prop-size-z" step="1" min="2" title="宽（Y，水平深度）">
+                <input type="number" id="prop-size-y" step="1" min="2" title="高（Z，竖直）">
+              </div>
+              <button class="btn-zero" id="btn-size-reset" title="归一：长宽高都设为 10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+              </button>
+            </div>
+            <div class="field" id="prop-pos-field"><label title="X / Y / Z（Z 轴竖直向上），整数单位">坐标</label>
+              <div class="vec-row">
+                <input type="number" id="prop-pos-x" step="1" title="X">
+                <input type="number" id="prop-pos-z" step="1" title="Y（水平深度）">
+                <input type="number" id="prop-pos-y" step="1" title="Z（竖直高度）">
+              </div>
+              <button class="btn-zero" id="btn-pos-zero" title="归零：移到原点 (0,0,0)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+              </button>
+            </div>
+            <label class="check" title="改尺寸或拖缩放手柄时三轴联动"><input type="checkbox" id="prop-lock">锁定比例</label>
+            <div class="field"><label title="开启吸附时按此点对齐网格">吸附基准</label>
+              <select id="prop-anchor">
+                <option value="center">中心</option>
+                <option value="bottom">下边缘（贴地）</option>
+                <option value="top">上边缘</option>
+                <option value="left">左边缘（X-）</option>
+                <option value="right">右边缘（X+）</option>
+                <option value="back">后边缘（Y-）</option>
+                <option value="front">前边缘（Y+）</option>
+              </select>
+            </div>
+            <div id="line-props" hidden>
+              <div class="field"><label title="线条粗细（世界单位，近大远小）">粗细</label><input type="number" id="line-width" min="0.5" max="40" step="0.5"></div>
+              <div class="field"><label title="X / Y / Z（Z 竖直），整数单位">起点</label>
+                <div class="vec-row">
+                  <input type="number" id="line-sx" step="1" title="X">
+                  <input type="number" id="line-sz" step="1" title="Y（深度）">
+                  <input type="number" id="line-sy" step="1" title="Z（竖直）">
+                </div>
+              </div>
+              <div class="field"><label title="X / Y / Z（Z 竖直），整数单位">终点</label>
+                <div class="vec-row">
+                  <input type="number" id="line-ex" step="1" title="X">
+                  <input type="number" id="line-ez" step="1" title="Y（深度）">
+                  <input type="number" id="line-ey" step="1" title="Z（竖直）">
+                </div>
+              </div>
+              <p class="section-hint">拖动节点小球移动 · 双击线上方块加节点 · 双击节点切折角/平滑 · Alt+点节点删除</p>
+            </div>
+            <div id="trough-props" hidden>
+              <div class="field"><label title="四周壁厚，整数单位（随「尺寸」缩放等比例变化）">壁厚</label><input type="number" id="trough-wall" min="2" step="1"></div>
+              <div class="field"><label title="底部厚度，整数单位；降到 0 则底部镂空，只剩四周围墙">底厚</label><input type="number" id="trough-bottom" min="0" step="1"></div>
+              <p class="section-hint">顶部始终敞口；底厚为 0 时上下都镂空，变成一圈围墙</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>外观</h2>
+            <div class="field"><label>颜色</label><input type="color" id="prop-color"></div>
+            <div class="swatches" id="prop-swatches"></div>
+            <div class="field slider" id="prop-opacity-field"><label title="整个物体的透明度，0=完全不可见">透明度 <span id="prop-opacity-val"></span></label><input type="range" id="prop-opacity" min="0" max="1" step="0.01"></div>
+            <div class="field" id="prop-texture-field"><label title="整个物体的材质纹理（贴面文字与组合不支持）">纹理</label><select id="prop-texture"></select></div>
+            <div id="texture-params"></div>
+            <label class="check" title="沿几何硬边描线（球体等光滑表面无硬边则无描线）"><input type="checkbox" id="stroke-on">边框</label>
+            <div id="stroke-config" hidden>
+              <div class="field"><label>边框颜色</label><input type="color" id="stroke-color"></div>
+              <div class="field"><label>粗细 px</label><input type="number" id="stroke-width" min="0.5" max="12" step="0.5"></div>
+              <div class="field"><label>样式</label>
+                <select id="stroke-style">
+                  <option value="solid">实线</option>
+                  <option value="dashed">虚线</option>
+                  <option value="dotted">点线</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section id="prop-section-animation" hidden>
+            <h2>动画</h2>
+            <div class="field" id="prop-appear-field" hidden><label title="这个物体在关键帧之间从无到有（或从有到无）时怎么过渡">出现动画</label>
+              <select id="prop-appear">
+                <option value="fade">渐变淡入淡出</option>
+                <option value="cut">突变（帧末瞬间出现/消失）</option>
+              </select>
+            </div>
+            <button class="btn btn-sm" id="btn-opacity-allframes" title="把当前旋转/缩放/颜色/透明度同步到该物体的全部关键帧（位置和镜头视角不受影响）；该物体原本没有出现的帧也会用当前位置让它出现（不再只在部分帧存在）" hidden>应用到全部帧（含出现）</button>
+          </section>
+
+          <section>
+            <h2>随机扰动</h2>
+            <label class="check" title="仅播放 / 导出视频时生效，边框预览不进视频"><input type="checkbox" id="jit-enabled">启用（播放/导出时生效）</label>
+            <div id="jit-config" hidden>
+              <div class="field"><label title="以物体为中心的漂移半径 X / Y / Z">范围 ±</label>
+                <div class="vec-row">
+                  <input type="number" id="jit-box-x" step="0.1" min="0" title="X 方向半径">
+                  <input type="number" id="jit-box-z" step="0.1" min="0" title="Y（水平深度）半径">
+                  <input type="number" id="jit-box-y" step="0.1" min="0" title="Z（竖直）半径">
+                </div>
+              </div>
+              <div class="field slider"><label>速度 <span id="jit-speed-val"></span></label><input type="range" id="jit-speed" min="0.1" max="5" step="0.1"></div>
+              <div class="field slider"><label>随机度 <span id="jit-rand-val"></span></label><input type="range" id="jit-rand" min="0" max="1" step="0.05"></div>
+            </div>
+          </section>
+        </div>
+
+        <section id="face-section" hidden>
+          <h2>选中面</h2>
+          <div class="field"><label>面颜色</label><input type="color" id="face-color"></div>
+          <div class="field slider"><label>透明度 <span id="face-opacity-val"></span></label><input type="range" id="face-opacity" min="0.05" max="1" step="0.05"></div>
+          <div class="field"><label title="只作用于这个面的材质纹理">面纹理</label><select id="face-texture"></select></div>
+          <div id="face-texture-params"></div>
+          <label class="check"><input type="checkbox" id="face-stroke-on">面边框</label>
+          <div id="face-stroke-config" hidden>
+            <div class="field"><label>边框颜色</label><input type="color" id="face-stroke-color"></div>
+            <div class="field"><label>粗细 px</label><input type="number" id="face-stroke-width" min="0.5" max="12" step="0.5"></div>
+            <div class="field"><label>样式</label>
+              <select id="face-stroke-style">
+                <option value="solid">实线</option>
+                <option value="dashed">虚线</option>
+                <option value="dotted">点线</option>
+              </select>
+            </div>
+          </div>
+          <div class="field bg-row">
+            <button class="btn btn-sm" id="btn-face-clear">清除样式</button>
+            <button class="btn btn-sm btn-danger" id="btn-face-delete">删除此面</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="tab-page" id="tab-layers">
+        <section>
+          <h2>显示设置</h2>
+          <div class="field slider"><label title="等比缩放全部灯光；调暗时面间明暗比例保持，棱角仍可辨">光照强度 <span id="light-int-val"></span></label><input type="range" id="light-int" min="0.15" max="1.5" step="0.05"></div>
+          <div class="field slider"><label title="普通物体的基础光泽（环境反射），转动时有光线流动感">表面光泽 <span id="light-gloss-val"></span></label><input type="range" id="light-gloss" min="0" max="0.7" step="0.05"></div>
+          <label class="check"><input type="checkbox" id="opt-shadow" checked>阴影显示</label>
+          <div id="shadow-config">
+            <div class="field slider"><label>阴影强度 <span id="shadow-int-val"></span></label><input type="range" id="shadow-int" min="0" max="0.9" step="0.01"></div>
+            <div class="field slider"><label>模糊度 <span id="shadow-blur-val"></span></label><input type="range" id="shadow-blur" min="0" max="2" step="0.01"></div>
+            <div class="field slider"><label title="灯位越低影子越长">阴影距离 <span id="shadow-dist-val"></span></label><input type="range" id="shadow-dist" min="0" max="1" step="0.05"></div>
+          </div>
+          <label class="check" title="阴影与平面全关时为纯白背景"><input type="checkbox" id="opt-ground" checked>平面显示</label>
+          <div class="field">
+            <label title="16:9 固定幕布，不随视角转动；虚线框为视频导出范围">背景</label>
+            <div class="bg-row">
+              <button class="btn btn-sm" id="btn-bg-pick">选图</button>
+              <button class="btn btn-sm" id="btn-bg-default">默认</button>
+              <button class="btn btn-sm" id="btn-bg-white">纯白</button>
+            </div>
+          </div>
+          <input type="file" id="bg-file" accept="image/png,image/jpeg,image/webp" hidden>
+        </section>
+        <section>
+          <h2>场景
+            <button class="btn btn-sm btn-primary" id="btn-scene-add">+ 新建场景</button>
+          </h2>
+          <p class="section-hint">不同场景的图层、物体、关键帧动画完全独立；点击切换场景，复制可在原场景内容基础上再改，新建则是全新空场景。导出视频/模型只导出当前这一个场景。</p>
+          <div id="scene-list" class="layer-list"></div>
+        </section>
+        <section>
+          <h2>图层
+            <button class="btn btn-sm btn-primary" id="btn-layer-add">+ 新建图层</button>
+          </h2>
+          <p class="section-hint">点击图层选中其全部物体（并设为当前层，新物体归入）；眼睛切换显隐，双击名称重命名。选中物体后可在「属性」tab 用「图层」下拉移动它到别的层。</p>
+          <div id="layer-list" class="layer-list"></div>
+        </section>
+      </div>
+
+      <div class="tab-page active" id="tab-scene">
+        <section>
+          <h2>物体动作</h2>
+          <div class="field" id="action-add-field">
+            <select id="action-type-select">
+              <option value="shake">抖动</option>
+              <option value="flash">闪烁</option>
+              <option value="bounce">弹跳</option>
+              <option value="pulse">脉冲缩放</option>
+            </select>
+            <button class="btn btn-sm btn-primary" id="btn-action-add">+ 添加到当前帧</button>
+          </div>
+          <div class="kf-actions action-play-row">
+            <button class="btn btn-sm" id="btn-action-play" title="只播放当前定位的这一条动作（不过渡、不切帧），演完回到当前帧">播放</button>
+            <button class="btn btn-sm" id="btn-action-next" title="定位跳到当前帧的下一个动作并播放它（不出当前帧）">下一步</button>
+          </div>
+          <p class="section-hint" id="action-empty-hint">选中一个物体、且已定位到某一帧，才能添加动作。</p>
+          <ol class="kf-list" id="action-list"></ol>
+        </section>
+        <section>
+          <h2>动画关键帧
+            <button class="btn btn-sm btn-primary" id="btn-add-keyframe">+ 记录当前</button>
+          </h2>
+          <div class="kf-actions">
+            <button class="btn btn-sm" id="btn-play">播放</button>
+            <button class="btn btn-sm" id="btn-next" title="只播放当前帧到下一帧的过渡，并定位到下一帧（像 PPT 点「下一步」）"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> 下一步</button>
+            <button class="btn btn-sm" id="btn-stop" hidden>停止</button>
+            <button class="btn btn-sm" id="btn-record">导出视频</button>
+          </div>
+          <p class="section-hint">点击帧行即定位；定位后所有编辑（含视角）自动保存进该帧，播放时帧间平滑过渡。</p>
+          <ol class="kf-list" id="kf-list"></ol>
+          <div class="field"><label>帧率 fps</label><input type="number" id="record-fps" min="10" max="120" step="1" value="60"></div>
+          <div class="field"><label title="1080p 内部以 4K 渲染再降采样（超采样抗锯齿，边缘更平滑）；4K 直接输出超清">分辨率</label>
+            <select id="record-res">
+              <option value="1080">1080p（超采样抗锯齿）</option>
+              <option value="4k">4K 超清</option>
+            </select>
+          </div>
+        </section>
+      </div>
+    </aside>
+  </div>
+
+  <div class="overlay" id="script-overlay" hidden>
+    <div class="script-panel">
+      <div class="script-head">
+        <h2>脚本模式 · 轻编程批量操作</h2>
+        <select id="script-example"></select>
+        <button class="btn btn-sm btn-primary" id="script-run" title="Ctrl+Enter">运行</button>
+        <button class="btn btn-sm" id="script-close">关闭</button>
+      </div>
+      <div class="script-quick">
+        <label>形状
+          <select id="qb-shape">
+            <option value="plate">薄板</option>
+            <option value="box">立方体</option>
+            <option value="sphere">球体</option>
+            <option value="cylinder">圆柱</option>
+            <option value="cone">圆锥</option>
+            <option value="torus">圆环体</option>
+          </select>
+        </label>
+        <label>排布
+          <select id="qb-layout">
+            <option value="grid">平面网格 n×n</option>
+            <option value="stack">竖直堆叠</option>
+            <option value="row">横向排列</option>
+            <option value="cube">立体阵列 n³</option>
+            <option value="circle">圆环阵列</option>
+          </select>
+        </label>
+        <label>数量 <input type="number" id="qb-count" value="5" min="1" max="20" step="1"></label>
+        <label>尺寸 <input type="number" id="qb-size" value="80" min="5" max="500" step="5"></label>
+        <label>间隔 <input type="number" id="qb-gap" value="0" min="0" max="500" step="2"></label>
+        <label>颜色 <input type="color" id="qb-color" value="#8DA0AE"></label>
+        <button class="btn btn-sm" id="qb-gen" title="按选项生成一段代码到编辑框，可再手改后运行">生成代码</button>
+      </div>
+      <textarea id="script-code" spellcheck="false"></textarea>
+      <pre class="script-msg" id="script-msg">选择示例或直接写代码，点「运行」（Ctrl+Enter）。整次运行记一步撤销，Ctrl+Z 可整体回退。</pre>
+      <div class="script-help">
+        创建：<code>box / sphere / cylinder / cone / torus / plane({ pos:[X,Y,Z], size:数字或[长,宽,高], color:"#hex", texture:"wood" })</code>（坐标为界面单位，Z 竖直）·
+        连线：<code>line({from,to,width,color})</code> · 查询：<code>objects()</code> <code>find(名字)</code> ·
+        句柄：<code>.moveTo() .moveBy() .size() .color() .texture() .rotate() .copy() .mirror() .remove()</code> ·
+        工具：<code>range(n)</code> <code>print()</code>
+      </div>
+    </div>
+  </div>
+  <footer class="hintbar" id="hintbar">左键选择 · 拖动旋转视角 · 滚轮缩放 · 右键平移 · W/E/R 切换移动/旋转/缩放</footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="undo-toast" role="status" aria-live="polite"></div>
+  <script type="module" src="index.js"></script>
+</body>
+</html>

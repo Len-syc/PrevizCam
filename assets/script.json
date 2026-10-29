@@ -1,0 +1,1712 @@
+{
+  "title": "武夷茶故事 · 大红袍的故事",
+  "format": {
+    "width": 1280,
+    "height": 720,
+    "fps": 24,
+    "totalFrames": 2880,
+    "totalSeconds": 120,
+    "sceneCount": 5,
+    "shotGroupCount": 15,
+    "shotMeaning": "15个分镜组，保留原16组全部情节；固定机位送行与冬春门景合为一组。素材编号沿用来源ID，不等于批次编号或生成次数。",
+    "segments": [
+      {
+        "id": "A",
+        "startFrame": 0,
+        "endFrame": 1440,
+        "shotGroups": 7
+      },
+      {
+        "id": "B",
+        "startFrame": 1440,
+        "endFrame": 2880,
+        "shotGroups": 8
+      }
+    ]
+  },
+  "intent": "以旧盏串联茶脉文脉，以丁显亲披红袍交代大红袍得名。朱熹只作开场。按民间传说演绎，不把剧中对白作为已考证史实或疗效依据。",
+  "globalVisual": "写实电影风格，1280×720，16:9，24fps；自然光或实景可用光，保留皮肤、粗麻、陶土、旧木与岩叶质感，表演克制。青灰绿与暖木褐为基础色，南宋清晨微暖、明代阴雨偏冷、春日及现代回到自然中性色。普通中景以35mm等效为参考，器物近景可用50–85mm等效；以三脚架固定机位为默认：单镜内保持机位、焦距、景别和构图稳定，不主动推近或拉远，不做光学变焦、数码放大、横移、摇镜、环绕或手持漂移。镜头变化优先通过独立定镜头之间硬切完成；人物和道具自然运动不受限制。只有明确叙事必要且单独标注时才考虑少量运镜。对白镜头优先三分之四正面，嘴部无遮挡，人物头部和布巾留在安全构图内。跨素材沿用同一人物与器物参考，不凭文字宣称已锁脸。",
+  "negative": {
+    "common": "不生成字幕、可读书法、题刻、匾额、商标、水印、界面；不做脸部融合、人物凭空增减、器物变形、多指断肢、衣物穿模、磨皮美颜、舞台化表演或变速动作。书稿只呈虚化墨痕，文字及标识留给后期。",
+    "ancient": "古代场景不出现现代塑料、拉链、眼镜、手表、电灯、电线、不锈钢、玻璃茶具、现代雨具和清代服饰。宋人只在南宋开场，明代寺院人物不与宋人同框。",
+    "modern": "现代场景独立生成；不用古代人物的脸或古装，不出现兔毫旧盏。女子不念旁白；饮茶可有自然嘴部动作，禁止说话口型。"
+  },
+  "productionRules": [
+    "生成提示词的唯一拼接顺序：全局视觉＋对应时代限制＋场景基准＋本素材人物状态＋相关道具基准＋本素材单一画面及动作＋对白规则。不能再附加旧批次整段多场景提示词。JSON内的compiledPrompt已按此规则展开。",
+    "所有时间均为24fps整帧纸面分配。片段区间采用前闭后开，最后有效画面帧为2879；120秒是结束边界。字幕、转场及收尾均在2880帧内，不另加片尾。",
+    "取用帧数是正常速度剪辑用量。视频源长度按实际入口支持的档位，向上选到不短于4秒且不短于取用长度；4秒只是本项目规划下限，不是对某个模型规格的断言。入口的时长、价格与可用性尚未在本轮核实。",
+    "长于入口单条上限的素材，执行前应按自然动作接点分成同场景子素材；不得偷偷加速、删改台词或超120秒。生成次数、重试次数和计费长度不能用最终分镜组数直接代替。",
+    "画面源不烘焙音乐、拟音、字幕和旁白；对白按逐字表制作并与画面同步。遮嘴或画外段沿用同一条完整声音，不从句中重开一句。环境、拟音、配乐与字幕在后期分别合成。",
+    "跨地点、跨季节与跨时代均用独立源剪辑；标为时间省略的段落允许正常速度动作片段之间硬切，不要求演员在几秒内走完远路。批次边界本身不换场。",
+    "丁显的病倒、扶救、卧榻和喂茶阶段，人物面色与湿衣以REF_DINGXIAN_SICK_V1为单一病中参考；康复提箱与离寺改用REF_DINGXIAN_BASE_V1第二栏蓝色书生装；次春报喜仍用第三栏红袍，脱袍后以第四栏白中单为服装基准并按各镜既有革带状态执行。",
+    "一只药碗在小几，清然空手取篓。",
+    "用户新增摄影约束：以三脚架固定机位为默认：单镜内保持机位、焦距、景别和构图稳定，不主动推近或拉远，不做光学变焦、数码放大、横移、摇镜、环绕或手持漂移。镜头变化优先通过独立定镜头之间硬切完成；人物和道具自然运动不受限制。只有明确叙事必要且单独标注时才考虑少量运镜。对白镜头优先三分之四正面，嘴部无遮挡，人物头部和布巾留在安全构图内。"
+  ],
+  "characters": [
+    {
+      "id": "CHAR_ZHUXI",
+      "name": "朱熹（晦庵）",
+      "appearance": "约53岁，清瘦，开阔额头、花白短须与鬓角、沉静目光。素黑布幅巾，深灰交领麻布长袍，浅褐领袖滚边，布带、布履。",
+      "voice": "中低男声，气息稳，亲切笃定，平收句尾；不播音、不拖腔。",
+      "states": {
+        "SONG": "仅Q1_S1—Q1_S3出现，坐于溪石左位；三镜保持同脸同服装。"
+      }
+    },
+    {
+      "id": "CHAR_CAIYUANDING",
+      "name": "蔡元定",
+      "appearance": "约47–48岁，中年瘦方圆脸，眼角细纹、下颌短须夹少量白须；浅褐交领麻衫，米色半臂，深褐布带、布鞋。",
+      "voice": "中年男声，中音偏温、略沙，向师长说话收着音量，不用少年声。",
+      "states": {
+        "SONG": "仅Q1_S1—Q1_S3开场空间；Q1_S1出声，其余可以画外。"
+      }
+    },
+    {
+      "id": "CHAR_QINGRAN",
+      "name": "释清然",
+      "appearance": "14岁少年男僧，单薄、圆脸略有婴儿肥、淡眉黑眼、无胡须，剃净头皮发根泛青。灰褐粗布宽袍、洗旧白领边、布绑腿与黑布鞋。",
+      "voice": "清亮偏薄的少年男声，问句好奇，采茶决定清楚而克制；不得用少女音。",
+      "states": {
+        "DRY": "藏经阁干衣；三日后晒茶及次春归来仍同一袍色、同脸，衣服已经干燥。",
+        "RAIN": "同一灰褐袍、扶救肩袖湿痕；床尾听住持后先看病人回想、转向再说采茶动机，语毕才取篓。出房到雨中采茶之后湿色更深，煮茶与喂茶仍湿，不透肤。",
+        "RAIN_LISTEN": "同一14岁少年男僧、灰褐湿袖与肩部湿痕；病人已安置禅房床榻，清然站床尾近门处听住持说床边这句，不说话、不取篓、不离房。",
+        "RAIN_MEDICINE": "同一灰褐湿袖少年僧人。病人已安置躺稳后，清然才从床侧小几端起朴素深褐药碗；本条开场已双手端碗在床尾近旁，住持说话期间把碗稳放小几并松手，留出双手。此前扶人和床榻放稳阶段没有端碗。",
+        "RAIN_AFTER_MEDICINE": "同一灰褐湿袖少年僧人，先前药碗已稳放床侧小几、双手空着。先看病人回想、转向说采茶动机；说完才空手伸向房门内侧竹篓，不端药碗取篓。"
+      }
+    },
+    {
+      "id": "CHAR_ABBOT",
+      "name": "住持（天心永乐禅寺）",
+      "appearance": "约62岁，次春不另换脸或强行老化；瘦、略驼、面颊凹、灰白稀眉与短白须，手背青筋及老人斑。土黄赭粗布僧袍，深褐袈裟一角覆左肩，黑布鞋。",
+      "voice": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。",
+      "states": {
+        "DRY": "藏经阁、三日后、次春院廊、崖下和茶桌均同装干衣。",
+        "RAIN": "袍摆与左肩袈裟边有扶救时溅湿的深色痕迹。门口与清然合力扶人；病人安置到禅房床榻后，住持坐在床侧照看，留在房内，不再扶着病人站在檐下。"
+      }
+    },
+    {
+      "id": "CHAR_DINGXIAN",
+      "name": "丁显",
+      "appearance": "约24岁，次春仍同一青年面孔；清瘦、颧骨略高、平眉、无胡须，细长手指带少量墨痕。",
+      "voice": "青年男声，中音偏干薄。病中仅非语言喘息，康复谢辞略虚但完整，报喜声音更实；不变成另一声线。",
+      "states": {
+        "SICK": "靛蓝交领布衫，深灰旧布褂，素青布巾、深褐布带，白袜黑布鞋；背竹编书箱。衣帽湿、面色苍白、眼白微红、唇干。",
+        "RECOVERED": "同一套书生衣帽已经干燥整理，气色改善，背同一书箱出门。",
+        "SCHOLAR": "次春暗红哑光圆领大袖可脱外袍，无补子、团花或金边；黑色扁圆短翅乌纱帽，素白厚实交领中单，素色革带、白袜黑布靴。无竹编书箱；随从箱笼留寺门外。",
+        "ROBE_IN_HAND": "崖下红袍已由本人脱下，尚握在双手、尚未披树；白中单完整不透肤，帽靴不变。革带临时放在身旁平岩，不在腰上。",
+        "ROBE_ON_TREE": "崖下红袍已在主茶丛枝条，丁显白中单完整不透肤、乌纱帽黑布靴不变，革带仍临时在身旁平岩、不在腰上；后退行揖，不再重新脱袍或系带。",
+        "TEA_TABLE": "归寺后茶桌时刻，红袍仍留九龙窠茶树，白中单完整不透肤、同乌纱帽与黑布靴；革带在归寺路程省略中取回并重新系于中单外，现在已束好。",
+        "SICK_GATE": "病中书生，靛蓝交领布衫、深灰旧布褂、素青布巾、深褐布带、白袜黑布鞋；衣帽湿，面色苍白、眼白微红、唇干。山门倒下后由二人扶入，书箱在转入禅房前卸下；不穿状元红袍。",
+        "SICK_SETTLING": "同一病中脸、同一湿书生衣帽，书箱已卸、在禅房近门墙角。二人已将其扶到木榻边，截取从榻边坐姿放低上身、头枕到素枕并躺稳的动作；不再背箱，不在门口。",
+        "SICK_BED": "同一病中脸、同一湿书生衣帽，书箱已卸在禅房近门墙角。丁显已安置在旧木榻上躺稳、头枕素枕，住持床侧照看；不站立、不背书箱，不再从门口突然出现在床上。"
+      },
+      "referenceStateMap": {
+        "SICK": {
+          "assetId": "REF_DINGXIAN_SICK_V1",
+          "region": "整张病中正面半身图",
+          "rule": "只借用同一病中面孔、苍白眼缘与湿蓝灰书生衣；站/倒/扶/躺姿势和书箱是否在背上按本素材原动作，不把定妆正面姿势照搬入床榻镜头。"
+        },
+        "RECOVERED": {
+          "assetId": "REF_DINGXIAN_BASE_V1",
+          "region": "第二栏蓝色书生全身",
+          "rule": "衣帽已干、气色好转；仍同一丁显，提箱/背箱与行礼按原动作。"
+        },
+        "SCHOLAR": {
+          "assetId": "REF_DINGXIAN_BASE_V1",
+          "region": "第三栏红袍乌纱帽全身",
+          "rule": "次春功成返寺，沿用原暗红哑光圆领袍与乌纱帽，身份与服饰不改。"
+        },
+        "ROBE_IN_HAND": {
+          "assetId": "REF_DINGXIAN_BASE_V1",
+          "region": "第四栏白中单为服装基准",
+          "rule": "红袍在本人双手，白中单完整不透肤；革带已解并放身旁平岩，不能照搬参考板腰间已束革带。"
+        },
+        "ROBE_ON_TREE": {
+          "assetId": "REF_DINGXIAN_BASE_V1",
+          "region": "第四栏白中单为服装基准",
+          "rule": "红袍已在茶树，白中单完整；革带仍在平岩，不在腰上。"
+        },
+        "TEA_TABLE": {
+          "assetId": "REF_DINGXIAN_BASE_V1",
+          "region": "第四栏白中单、乌纱帽与已系革带",
+          "rule": "归寺省略中取回重系革带，茶桌已束好；红袍留树，不回到身上。"
+        }
+      }
+    },
+    {
+      "id": "CHAR_MODERN_WOMAN",
+      "name": "现代茶室女子",
+      "appearance": "约33岁，清瘦，自然皮肤与淡雀斑、黑直发低束。米白亚麻立领衬衫挽袖、深灰亚麻长裤、素色布拖鞋，无首饰美甲；修长手指，左手虎口约一厘米旧疤为参考特征，不为展示疤额外加镜头。",
+      "voice": "无对白，无需试音；只保留自然呼吸。",
+      "states": {
+        "MODERN": "仅Q4_S4，三条素材同脸、同袖口、同一双手；与丁显无身份或同脸关系。"
+      }
+    },
+    {
+      "id": "CHAR_NARRATOR",
+      "name": "尾声画外旁白",
+      "appearance": "不出镜、不生成面孔或手部。",
+      "voice": "中低男声、温和偏暗、自然叙述，句间有气口。Q4_D5一条完整旁白，独立于现代女子，不另生成备选女声。",
+      "states": {
+        "VOICE_ONLY": "仅Q4_D5，声音在现代段画外出现。"
+      }
+    }
+  ],
+  "props": [
+    {
+      "id": "PROP_OLD_CUP",
+      "name": "流传旧盏",
+      "prompt": "浅灰褐釉兔毫盏，约11厘米口径、6厘米高，矮圈足、银褐细兔毫纹、外壁釉不到底；器沿一处米粒大小磕口。磕口固定在器物本体，不强行固定所有镜头里的屏幕方向。宋代温润干净；明代初见有薄灰，住持拂去浮尘；重返茶桌前已清洁可饮，无需另拍清洗过程。仅属寺中流传器物，宋明用同一视觉参考；持盏、接盏、斟茶和推到客人面前都是日常使用，不增加赠送所有权的剧情。雨中救人使用另一个朴素陶碗陶勺，旧盏留在藏经阁旧木托，回寺茶桌才再取用。",
+      "physicalPrompt": "浅灰褐釉兔毫盏，约11厘米口径、6厘米高，矮圈足、银褐细兔毫纹、外壁釉不到底；器沿有一处米粒大小磕口，位置固定在器物本体。"
+    },
+    {
+      "id": "PROP_TREES",
+      "name": "九龙窠三丛茶树",
+      "prompt": "三丛常绿灌木，主丛约1.3米，枝干褐灰、厚实深绿叶与浅绿嫩梢，生于有苔藓蕨类的灰褐岩缝；岩壁上部可见赭红矿色，下部雨湿偏深灰。主丛在画面左，另两丛居右后；晴雨匹配镜必须同一几何参考与固定构图。披袍镜可以扩大景别，但不得改树与岩缝的相对位置；主丛靠小径、丁显可在地面触及，不新增攀崖。暗红袍披在主丛枝条，袖与下摆自然垂下、留出可见绿叶。无题刻、名牌、围栏或红绸。宋代精舍茶圃为另一地点的小茶苗，不与九龙窠三丛强求同树同构图。",
+      "physicalPrompt": "三丛常绿岩茶灌木，主丛约1.3米，枝干褐灰、深绿厚叶、浅绿嫩梢；灰褐岩缝、苔藓蕨类，岩壁上部赭红矿色。主丛在左、另两丛右后，主丛临小径、地面可伸手触及；不得增减丛数、改变树岩关系，无题刻名牌围栏。"
+    },
+    {
+      "id": "PROP_WHITE_CUP",
+      "name": "现代白瓷杯",
+      "prompt": "约7.5厘米口径、5厘米高的素白哑光薄壁瓷杯，无磕口、图纹、金边或款识，置木托盘。现代独立器物；古今切点匹配液面在画面中的位置、尺度、浅琥珀色和波纹方向，不要求不同口径器物物理毫米完全一致。",
+      "physicalPrompt": "独立现代素白哑光瓷杯，约7.5厘米口径、5厘米高，无磕口花纹金边或款识，配木托盘。"
+    },
+    {
+      "id": "PROP_RESCUE",
+      "name": "伞、竹篓、书箱与煮茶器",
+      "prompt": "油纸伞已收靠寺门内柱，二人空手扶人进寺。转入禅房路程省略，书箱已卸在房内近门墙角，三日后本人拿回。竹篓预放禅房房门内侧；丁显在床榻躺稳后，住持床侧察看并说Q2_D4，清然听完才说Q2_D3、取篓出房。陶罐柴灶煮鲜叶姜片，陶碗勺回同一榻喂茶，住持仍在床侧。流传旧盏不参与救人。 喂茶汤先待温，陶碗陶勺逐勺喂；沸煮与入口不连续实时发生，书箱始终有从墙边取走的动作依据。 扶人时清然双手空出；安置后药碗由独立PROP_MEDICINE_BOWL规定，已在住持话中放妥。后续茶姜汤另用浅褐陶碗陶勺，不把药碗、茶汤碗与流传旧盏混为同物。",
+      "physicalPrompt": "本场所需均为旧式朴素生活器具：油纸伞、竹篓、竹编书箱、陶罐、陶碗、陶勺、旧木榻。只出现下列当前状态明确指定的器具。"
+    },
+    {
+      "id": "PROP_ROBE",
+      "name": "可脱暗红袍与革带",
+      "prompt": "丁显返乡所穿同一件暗红哑光圆领大袖外袍，可解领口、可褪双袖，无补子金饰。本人解下革带放近旁平岩，亲手脱袍、披茶树。住持仅旁观，不触碰红袍。袍留树；归寺省略中丁显取回革带束在完整白中单外。",
+      "physicalPrompt": "同一件暗红哑光圆领大袖可脱外袍，无补子刺绣金饰；配素色可解革带，袍内为完整厚实白中单。"
+    },
+    {
+      "id": "PROP_MEDICINE_BOWL",
+      "name": "先前汤药的药碗线索",
+      "prompt": "朴素无纹深褐陶药碗，碗内少量先前汤药；不写药名或配方，不新增煎药剧情。丁显安置躺稳后清然才端起，扶人阶段双手空出；住持床侧说Q2_D4期间，清然把药碗稳放床侧靠自己一侧的小几，随后松手。清然看病人、接Q2_D3及取篓出门时药碗始终在小几，不再端着。不用流传旧盏作药碗；后续适温茶姜汤使用另一只浅褐陶碗和陶勺，药碗留小几作背景。",
+      "physicalPrompt": "无纹深褐陶药碗，碗内少量先前汤药；床侧靠清然一侧木小几。另有浅褐茶姜汤碗，不能混作流传兔毫旧盏。"
+    }
+  ],
+  "locations": [
+    {
+      "id": "LOC_STREAM",
+      "era": "SONG",
+      "name": "南宋武夷精舍外溪石",
+      "prompt": "1183年春日清晨，九曲溪五曲溪畔，薄雾、青黛山峰倒影，天然平整巨石作茶灶；朱熹左、蔡元定右。陶茶碾、长流陶汤瓶、旧盏与虚化墨痕书稿位置连续，精舍旁新绿茶圃在右后。溪流声不断。",
+      "geometryPrompt": "九曲溪五曲溪畔，平整天然巨石作茶灶、黛青山峰倒影、精舍茅檐与右后茶圃。陶茶碾、长流陶汤瓶、虚化墨痕书稿位置连续。"
+    },
+    {
+      "id": "LOC_LIBRARY",
+      "era": "MING",
+      "name": "明代天心永乐禅寺藏经阁",
+      "prompt": "洪武年间秋日午后，深褐旧木经架在左、方格木棂光自右后进入，旧经卷布包与木函无可读字。经案左端放旧木托。清然在画面左，住持右侧半步、略高半头；两镜保持同轴同光，旧盏由少年拿起，住持接过，最后放回木托。",
+      "geometryPrompt": "明代寺内旧木藏经阁，深褐经架在左、方格木棂在右后，旧卷布包木函无可读字，经案左端放旧木托；同轴双人景清然左、住持右侧半步。"
+    },
+    {
+      "id": "LOC_TREES",
+      "era": "MING",
+      "name": "明代九龙窠崖下",
+      "prompt": "三丛茶树与岩壁关系依PROP_TREES。晴雨镜固定机位：约50mm等效、高1.4米、主丛距机位约2.2米；披袍镜退至约3米容纳人物，保持同一侧与地理关系。茶丛能从小径伸手触及。雨段深秋黄昏，披袍段次春日间。",
+      "geometryPrompt": "九龙窠崖下三丛茶树临小径，树岩关系固定。晴雨镜约50mm等效、高1.4米、主丛距机位约2.2米；人物披袍镜退至约3米，仍同侧同地理关系。"
+    },
+    {
+      "id": "LOC_GATE",
+      "era": "MING",
+      "name": "寺门与院廊",
+      "prompt": "山门外三级湿石阶、蜿蜒山径，赭红旧墙、半开深褐木门，门内有檐廊与青石/方砖院地。扶救用门槛内避雨处，离别、季节转场固定看外景；报喜与回答改用门内同轴中景：清然左前景抱竹匾，住持左廊下、丁显右近门。次春同一接待位置与光向连续，随从与箱笼在门外。",
+      "geometryPrompt": "明代寺门，门外三级石阶连蜿蜒山径、赭红旧墙与半开深褐木门，门内檐廊、青石/方砖院地，檐柱旁可避雨。季节匹配镜固定看门外；接待人物同轴内景丁显右近门、僧人左廊下。"
+    },
+    {
+      "id": "LOC_ROOM",
+      "era": "MING",
+      "name": "禅房与灶间",
+      "prompt": "旧木榻、素布被、木门、墙边放书箱，木格窗自然光；灶间柴灶陶罐，无现代灯具。雨中低光暖火，三日后清晨窗光干净。灶间和榻边是分别拍摄的相邻空间，不让陶罐变成床边物件。",
+      "geometryPrompt": "明代禅房与相邻灶间，旧木榻、素被、木格窗、墙边可放书箱；灶间为柴灶陶罐。当前只拍动作所指定的一个空间，不把灶搬到榻边。"
+    },
+    {
+      "id": "LOC_TEA_TABLE",
+      "era": "MING",
+      "name": "寺院古树下茶桌",
+      "prompt": "次春同日下午，老树下朴素木茶桌，旧木托在住持左手近处。住持坐左、丁显坐右；丁显白中单外革带已重新束好，帽靴不变，红袍留树。开场住持已从木托拿起寺中清洁旧盏，再以陶壶斟已泡好的茶汤、沿桌轻推给客人饮用；盏不赠送。",
+      "geometryPrompt": "明代寺院古树下朴素木茶桌，旧木托在桌左近手处；二人景住持左、丁显右。"
+    },
+    {
+      "id": "LOC_MODERN",
+      "era": "MODERN",
+      "name": "现代武夷山茶室",
+      "prompt": "现代清晨，木桌、木托、素白瓷杯，窗外茶山是虚焦绿色背景；自然侧窗光。女子米白袖口、同一双手和同一张脸贯穿三条素材，液面特写同样属于室内茶桌，不另切茶山外景。",
+      "geometryPrompt": "现代室内武夷山茶室，木桌木托，窗外茶山虚焦绿背景，独立素白瓷杯。"
+    },
+    {
+      "id": "LOC_SICKROOM",
+      "era": "MING",
+      "name": "寺内禅房床榻",
+      "prompt": "同一朴素禅房：旧木榻、素布被枕、木格窗、近门墙角书箱、房门内侧竹篓。二人把丁显扶到榻边安置躺稳，住持留床侧察看并说Q2_D4，清然在床尾近门静听；住持说完，清然才面对他接Q2_D3，然后取篓离房。喂茶与三日后沿用同一床榻、枕向及墙角书箱；室内无灶火或落雨。 喂茶在煎煮后另经待温，正文是一勺一勺喂，素材只取一勺代表；三日后从榻边起身取箱可以原速时间省略，不能写成他从未起身。 床侧台词前保留目察，清然听后有看病人与转向的停顿；清然语毕才取篓，出房不要求在末10帧全部完成。 床侧靠清然一侧有木小几，先前汤药碗安置后才由清然端起，并在住持说话画面内放回；清然接话及离房后药碗留小几。后续喂茶另用浅褐茶姜汤碗。",
+      "geometryPrompt": "明代寺内禅房，旧木榻、素被素枕、木格窗，近门墙角书箱、房门内侧竹篓；床侧靠清然一侧有木小几。榻与枕向固定，住持床侧照看、清然床尾近门。无灶具，室内无落雨。"
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "Q1_D1",
+      "speaker": "CHAR_CAIYUANDING",
+      "text": "先生，学子日日登门，您著书到深夜。今日煮茶，也该歇一歇。",
+      "shotId": "Q1_S1",
+      "startFrame": 12,
+      "endFrame": 166,
+      "startSeconds": 0.5,
+      "endSeconds": 6.916666666666667,
+      "chineseCharacters": 23,
+      "estimatedCharactersPerSecond": 3.58,
+      "direction": "劝老师歇息，轻声自然。",
+      "voicePrompt": "中年男声，中音偏温、略沙，向师长说话收着音量，不用少年声。 劝老师歇息，轻声自然。\n逐字读：先生，学子日日登门，您著书到深夜。今日煮茶，也该歇一歇。\n纸面窗口0.5—6.917秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q1_D2",
+      "speaker": "CHAR_ZHUXI",
+      "text": "武夷的茶，长在岩缝里。治学也一样：沉得下心，熬得住火。",
+      "shotId": "Q1_S2",
+      "startFrame": 168,
+      "endFrame": 330,
+      "startSeconds": 7,
+      "endSeconds": 13.75,
+      "chineseCharacters": 22,
+      "estimatedCharactersPerSecond": 3.26,
+      "direction": "以茶喻学，平缓笃定；前段手部画外、后段接同一条声音。",
+      "voicePrompt": "中低男声，气息稳，亲切笃定，平收句尾；不播音、不拖腔。 以茶喻学，平缓笃定；前段手部画外、后段接同一条声音。\n逐字读：武夷的茶，长在岩缝里。治学也一样：沉得下心，熬得住火。\n纸面窗口7—13.75秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q1_D3",
+      "speaker": "CHAR_ZHUXI",
+      "text": "千百年后，这山间的茶，自会有它的名字。",
+      "shotId": "Q1_S3",
+      "startFrame": 336,
+      "endFrame": 432,
+      "startSeconds": 14,
+      "endSeconds": 18,
+      "chineseCharacters": 16,
+      "estimatedCharactersPerSecond": 4,
+      "direction": "望向茶圃轻笑，说完才举盏。",
+      "voicePrompt": "中低男声，气息稳，亲切笃定，平收句尾；不播音、不拖腔。 望向茶圃轻笑，说完才举盏。\n逐字读：千百年后，这山间的茶，自会有它的名字。\n纸面窗口14—18秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q1_D4",
+      "speaker": "CHAR_ABBOT",
+      "text": "晦庵先生留下的茶盏，在寺里传了几百年。",
+      "shotId": "Q1_S4",
+      "startFrame": 504,
+      "endFrame": 620,
+      "startSeconds": 21,
+      "endSeconds": 25.833333333333332,
+      "chineseCharacters": 17,
+      "estimatedCharactersPerSecond": 3.52,
+      "direction": "接盏拂尘并行，温和交代来历。",
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 接盏拂尘并行，温和交代来历。\n逐字读：晦庵先生留下的茶盏，在寺里传了几百年。\n纸面窗口21—25.833秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q2_D1",
+      "speaker": "CHAR_QINGRAN",
+      "text": "师父，朱先生当年也喝过崖上那几株茶吗？",
+      "shotId": "Q2_S1",
+      "startFrame": 630,
+      "endFrame": 737,
+      "startSeconds": 26.25,
+      "endSeconds": 30.708333333333332,
+      "chineseCharacters": 17,
+      "estimatedCharactersPerSecond": 3.81,
+      "direction": "好奇地问师父。",
+      "voicePrompt": "清亮偏薄的少年男声，问句好奇，采茶决定清楚而克制；不得用少女音。 好奇地问师父。\n逐字读：师父，朱先生当年也喝过崖上那几株茶吗？\n纸面窗口26.25—30.708秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q2_D2",
+      "speaker": "CHAR_ABBOT",
+      "text": "这就说不准了。那几株茶，当年还只是无名野茶。",
+      "shotId": "Q2_S1",
+      "startFrame": 747,
+      "endFrame": 860,
+      "startSeconds": 31.125,
+      "endSeconds": 35.833333333333336,
+      "chineseCharacters": 19,
+      "estimatedCharactersPerSecond": 4.04,
+      "direction": "先回应不能确定，略停，再说无名野茶；不抢词。",
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 先回应不能确定，略停，再说无名野茶；不抢词。\n逐字读：这就说不准了。那几株茶，当年还只是无名野茶。\n纸面窗口31.125—35.833秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q2_D4",
+      "speaker": "CHAR_ABBOT",
+      "text": "风寒入体，加上路途劳顿，普通汤药见效太慢。",
+      "shotId": "Q2_S3",
+      "direction": "丁显已在禅房榻上躺稳。住持坐床边察看后，向近旁清然完整说出这句话；自然停顿，不高声宣讲。说完清然才接采茶动机。",
+      "startFrame": 1134,
+      "endFrame": 1278,
+      "startSeconds": 47.25,
+      "endSeconds": 53.25,
+      "chineseCharacters": 18,
+      "estimatedCharactersPerSecond": 3,
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 丁显已在禅房榻上躺稳。住持坐床边察看后，向近旁清然完整说出这句话；自然停顿，不高声宣讲。说完清然才接采茶动机。\n逐字读：风寒入体，加上路途劳顿，普通汤药见效太慢。\n纸面窗口47.25—53.25秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q2_D3",
+      "speaker": "CHAR_QINGRAN",
+      "text": "师父，往年山民受凉，都喝那几株茶。我去采些来！",
+      "shotId": "Q2_S3",
+      "startFrame": 1306,
+      "endFrame": 1430,
+      "startSeconds": 54.416666666666664,
+      "endSeconds": 59.583333333333336,
+      "chineseCharacters": 19,
+      "estimatedCharactersPerSecond": 3.68,
+      "direction": "住持说完Q2_D4后，清然先看病人、回想旧例并转向住持，才完整接Q2_D3。说完以后才伸手取篓，不边说边拿；出房路程可省略，住持仍留床侧。",
+      "voicePrompt": "清亮偏薄的少年男声，问句好奇，采茶决定清楚而克制；不得用少女音。 住持说完Q2_D4后，清然先看病人、回想旧例并转向住持，才完整接Q2_D3。说完以后才伸手取篓，不边说边拿；出房路程可省略，住持仍留床侧。\n逐字读：师父，往年山民受凉，都喝那几株茶。我去采些来！\n纸面窗口54.417—59.583秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q3_D1",
+      "speaker": "CHAR_DINGXIAN",
+      "text": "多谢小师父救命之恩。在下丁显，此番是赴京赶考，不想竟病倒于此，此番若能金榜题名，必定重返武夷山，报答救命之恩。",
+      "shotId": "Q3_S1",
+      "startFrame": 1653,
+      "endFrame": 1833,
+      "startSeconds": 68.875,
+      "endSeconds": 76.375,
+      "chineseCharacters": 30,
+      "estimatedCharactersPerSecond": 4,
+      "direction": "院中面对清然略虚弱地致谢，保持完整自然句。",
+      "voicePrompt": "青年男声，中音偏干薄。病中仅非语言喘息，康复谢辞略虚但完整，报喜声音更实；不变成另一声线。 院中面对清然略虚弱地致谢，保持完整自然句。\n逐字读：多谢小师父救命之恩。在下丁显，此番是赴京赶考，不想竟病倒于此，此番若能金榜题名，必定重返武夷山，报答救命之恩。\n纸面窗口68.875—76.375秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q3_D2",
+      "speaker": "CHAR_QINGRAN",
+      "text": "路上当心。",
+      "shotId": "Q3_S2",
+      "startFrame": 1844,
+      "endFrame": 1874,
+      "startSeconds": 76.83333333333333,
+      "endSeconds": 78.08333333333333,
+      "chineseCharacters": 4,
+      "estimatedCharactersPerSecond": 3.2,
+      "direction": "门内轻声叮嘱，不追出大喊。",
+      "voicePrompt": "清亮偏薄的少年男声，问句好奇，采茶决定清楚而克制；不得用少女音。 门内轻声叮嘱，不追出大喊。\n逐字读：路上当心。\n纸面窗口76.833—78.083秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q3_D3",
+      "speaker": "CHAR_DINGXIAN",
+      "text": "师父！丁显高中状元，特来答谢救命之恩！",
+      "shotId": "Q3_S4",
+      "startFrame": 2004,
+      "endFrame": 2107,
+      "startSeconds": 83.5,
+      "endSeconds": 87.79166666666667,
+      "chineseCharacters": 16,
+      "estimatedCharactersPerSecond": 3.73,
+      "direction": "跨门站定后报喜，说完再揖。",
+      "voicePrompt": "青年男声，中音偏干薄。病中仅非语言喘息，康复谢辞略虚但完整，报喜声音更实；不变成另一声线。 跨门站定后报喜，说完再揖。\n逐字读：师父！丁显高中状元，特来答谢救命之恩！\n纸面窗口83.5—87.792秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q4_D1",
+      "speaker": "CHAR_ABBOT",
+      "text": "状元公客气了。救你的是崖上那几株古茶树。",
+      "shotId": "Q4_S1",
+      "startFrame": 2148,
+      "endFrame": 2266,
+      "startSeconds": 89.5,
+      "endSeconds": 94.41666666666667,
+      "chineseCharacters": 18,
+      "estimatedCharactersPerSecond": 3.66,
+      "direction": "同一寺门内直接回答丁显，答完再指路。",
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 同一寺门内直接回答丁显，答完再指路。\n逐字读：状元公客气了。救你的是崖上那几株古茶树。\n纸面窗口89.5—94.417秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q4_D2",
+      "speaker": "CHAR_DINGXIAN",
+      "text": "这身红袍，留在崖上。",
+      "shotId": "Q4_S2",
+      "startFrame": 2299,
+      "endFrame": 2347,
+      "startSeconds": 95.79166666666667,
+      "endSeconds": 97.79166666666667,
+      "chineseCharacters": 8,
+      "estimatedCharactersPerSecond": 4,
+      "direction": "边脱自己的外袍边平实说，八个汉字。",
+      "voicePrompt": "青年男声，中音偏干薄。病中仅非语言喘息，康复谢辞略虚但完整，报喜声音更实；不变成另一声线。 边脱自己的外袍边平实说，八个汉字。\n逐字读：这身红袍，留在崖上。\n纸面窗口95.792—97.792秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q4_D3",
+      "speaker": "CHAR_ABBOT",
+      "text": "红袍披树，从此便叫大红袍。",
+      "shotId": "Q4_S2",
+      "startFrame": 2438,
+      "endFrame": 2520,
+      "startSeconds": 101.58333333333333,
+      "endSeconds": 105,
+      "chineseCharacters": 11,
+      "estimatedCharactersPerSecond": 3.22,
+      "direction": "看到红袍已披树后温和说出名字，不喊口号。",
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 看到红袍已披树后温和说出名字，不喊口号。\n逐字读：红袍披树，从此便叫大红袍。\n纸面窗口101.583—105秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q4_D4",
+      "speaker": "CHAR_ABBOT",
+      "text": "晦庵先生说，茶脉即文脉。这盏茶，南宋传到今日。",
+      "shotId": "Q4_S3",
+      "startFrame": 2551,
+      "endFrame": 2690,
+      "startSeconds": 106.29166666666667,
+      "endSeconds": 112.08333333333333,
+      "chineseCharacters": 19,
+      "estimatedCharactersPerSecond": 3.28,
+      "direction": "茶桌对客人说；液面镜继续同一条声音。",
+      "voicePrompt": "老年男声，中低偏干沙，温和陈述，不用洪亮宣讲腔。各句自然语速以试听校准，撤销旧稿机械固定每秒3.5字的要求。 茶桌对客人说；液面镜继续同一条声音。\n逐字读：晦庵先生说，茶脉即文脉。这盏茶，南宋传到今日。\n纸面窗口106.292—112.083秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    },
+    {
+      "id": "Q4_D5",
+      "speaker": "CHAR_NARRATOR",
+      "text": "朱子在武夷种茶，明代古寺以岩茶救书生。一盏茶，串起千年茶脉文脉。",
+      "shotId": "Q4_S4",
+      "startFrame": 2714,
+      "endFrame": 2875,
+      "startSeconds": 113.08333333333333,
+      "endSeconds": 119.79166666666667,
+      "chineseCharacters": 28,
+      "estimatedCharactersPerSecond": 4.17,
+      "direction": "尾声画外独立叙述，保留千年；现代女子不配这句。",
+      "voicePrompt": "中低男声、温和偏暗、自然叙述，句间有气口。Q4_D5一条完整旁白，独立于现代女子，不另生成备选女声。 尾声画外独立叙述，保留千年；现代女子不配这句。\n逐字读：朱子在武夷种茶，明代古寺以岩茶救书生。一盏茶，串起千年茶脉文脉。\n纸面窗口113.083—119.792秒。声音未实测，原字与自然语速保留，不省词、不抢词。"
+    }
+  ],
+  "shots": [
+    {
+      "id": "Q1_S1",
+      "sceneId": "SCENE_1",
+      "locationId": "LOC_STREAM",
+      "cast": {
+        "CHAR_ZHUXI": "SONG",
+        "CHAR_CAIYUANDING": "SONG"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "溪石劝歇",
+      "picture": "溪面半秒建立后切石上二人中景。蔡元定轻叩书稿并说Q1_D1，朱熹句尾抬眼；书稿无可读字。",
+      "sound": "溪水、风、淡远鸟声，叩纸与衣料轻响。远处含混书声不形成额外可辨台词。",
+      "transition": "同空间硬切下一镜，溪水风声连续。",
+      "materials": [
+        {
+          "useFrames": 12,
+          "action": "只拍溪面薄雾、巨石和精舍环境，人物和器物操作不入画。",
+          "id": "Q1_S1_M1",
+          "kind": "video",
+          "startFrame": 0,
+          "endFrame": 12,
+          "useSeconds": 0.5,
+          "locationId": "LOC_STREAM",
+          "cast": {},
+          "propIds": [],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 156,
+          "action": "石上二人同轴中景；蔡元定完整说Q1_D1，叩书与开口并行，朱熹末尾抬眼。",
+          "id": "Q1_S1_M2",
+          "kind": "video",
+          "startFrame": 12,
+          "endFrame": 168,
+          "useSeconds": 6.5,
+          "locationId": "LOC_STREAM",
+          "cast": {
+            "CHAR_ZHUXI": "SONG",
+            "CHAR_CAIYUANDING": "SONG"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q1_D1"
+          ]
+        }
+      ],
+      "batchIndex": 1,
+      "dialogueIds": [
+        "Q1_D1"
+      ],
+      "startFrame": 0,
+      "durationFrames": 168,
+      "endFrame": 168,
+      "startSeconds": 0,
+      "endSeconds": 7
+    },
+    {
+      "id": "Q1_S2",
+      "sceneId": "SCENE_1",
+      "locationId": "LOC_STREAM",
+      "cast": {
+        "CHAR_ZHUXI": "SONG"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "以茶喻学",
+      "picture": "前1.5秒只取注水动作末段与水汽手部近景，后5.5秒朱熹面部近景接同一条Q1_D2声音；陶碾和书稿为静置环境，不要求1.5秒内再完成碾茶、换壶、注水整轮动作。",
+      "sound": "Q1_D2从手部段即开始，连续跨切点；溪水、轻注水声，不重新起一句。",
+      "transition": "切朱熹看茶圃中近景。",
+      "materials": [
+        {
+          "useFrames": 36,
+          "action": "只拍朱熹袖口与陶汤瓶已在注水的末段，茶盏水汽上升；嘴不入画，声音后配Q1_D2开头。",
+          "id": "Q1_S2_M1",
+          "kind": "video",
+          "startFrame": 168,
+          "endFrame": 204,
+          "useSeconds": 1.5,
+          "locationId": "LOC_STREAM",
+          "cast": {
+            "CHAR_ZHUXI": "SONG"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q1_D2"
+          ]
+        },
+        {
+          "useFrames": 132,
+          "action": "朱熹近景说Q1_D2后续部分，接同一条完整声音，末尾看右后茶圃；不重复台词开头。",
+          "id": "Q1_S2_M2",
+          "kind": "video",
+          "startFrame": 204,
+          "endFrame": 336,
+          "useSeconds": 5.5,
+          "locationId": "LOC_STREAM",
+          "cast": {
+            "CHAR_ZHUXI": "SONG"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q1_D2"
+          ]
+        }
+      ],
+      "batchIndex": 1,
+      "dialogueIds": [
+        "Q1_D2"
+      ],
+      "startFrame": 168,
+      "durationFrames": 168,
+      "endFrame": 336,
+      "startSeconds": 7,
+      "endSeconds": 14
+    },
+    {
+      "id": "Q1_S3",
+      "sceneId": "SCENE_1",
+      "locationId": "LOC_STREAM",
+      "cast": {
+        "CHAR_ZHUXI": "SONG"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "茶有其名，举盏转场",
+      "picture": "前4秒朱熹望茶圃轻笑说完Q1_D3。后2秒切固定紧景只取袖口、手与茶盏上举的动作；举到胸前即可，撤销固定中景中杯沿须填满全屏的物理冲突。",
+      "sound": "Q1_D3说完后举盏；溪声渐淡，为室内接声留白。",
+      "transition": "20秒在举盏上行中硬切明代少年拿旧盏；以同一紧景下杯的屏幕位置、尺度和上行方向匹配，两侧各自固定机位、独立生成。",
+      "materials": [
+        {
+          "useFrames": 96,
+          "action": "朱熹看茶圃，轻笑完整说Q1_D3，不提前举杯挡嘴。",
+          "id": "Q1_S3_M1",
+          "kind": "video",
+          "startFrame": 336,
+          "endFrame": 432,
+          "useSeconds": 4,
+          "locationId": "LOC_STREAM",
+          "cast": {
+            "CHAR_ZHUXI": "SONG"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q1_D3"
+          ]
+        },
+        {
+          "useFrames": 48,
+          "action": "固定紧景，只见朱熹深灰袖口和双手平稳举起旧盏；盏上行到胸前，不向镜头猛推。人物脸在画外。",
+          "id": "Q1_S3_M2",
+          "kind": "video",
+          "startFrame": 432,
+          "endFrame": 480,
+          "useSeconds": 2,
+          "locationId": "LOC_STREAM",
+          "cast": {
+            "CHAR_ZHUXI": "SONG"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 1,
+      "dialogueIds": [
+        "Q1_D3"
+      ],
+      "startFrame": 336,
+      "durationFrames": 144,
+      "endFrame": 480,
+      "startSeconds": 14,
+      "endSeconds": 20
+    },
+    {
+      "id": "Q1_S4",
+      "sceneId": "SCENE_2",
+      "locationId": "LOC_LIBRARY",
+      "cast": {
+        "CHAR_QINGRAN": "DRY",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "旧盏入寺",
+      "picture": "首秒固定紧景，明代少年双手从经案拿起蒙薄灰旧盏，接前镜杯上行动势；后5秒切藏经阁二人中景，住持接盏拂尘并说Q1_D4，少年抬眼。",
+      "sound": "木地板、粗布、轻拂灰尘和窗外秋风，住持近场Q1_D4；宋代溪声已退。",
+      "transition": "26秒直接接同一藏经阁问答，不补冻帧或再加半秒停顿。",
+      "materials": [
+        {
+          "useFrames": 24,
+          "action": "固定杯与手的紧景，少年灰褐袖口入画，旧盏被双手向上拿起；按宋侧末帧构图匹配，不出现宋人。",
+          "id": "Q1_S4_M1",
+          "kind": "video",
+          "startFrame": 480,
+          "endFrame": 504,
+          "useSeconds": 1,
+          "locationId": "LOC_LIBRARY",
+          "cast": {
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 120,
+          "action": "同轴二人中景，少年把旧盏交住持右手，住持边拂浮尘边完整说Q1_D4，清然末尾抬眼；结尾旧盏仍在住持右手。",
+          "id": "Q1_S4_M2",
+          "kind": "video",
+          "startFrame": 504,
+          "endFrame": 624,
+          "useSeconds": 5,
+          "locationId": "LOC_LIBRARY",
+          "cast": {
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q1_D4"
+          ]
+        }
+      ],
+      "batchIndex": 1,
+      "dialogueIds": [
+        "Q1_D4"
+      ],
+      "startFrame": 480,
+      "durationFrames": 144,
+      "endFrame": 624,
+      "startSeconds": 20,
+      "endSeconds": 26
+    },
+    {
+      "id": "Q2_S1",
+      "sceneId": "SCENE_2",
+      "locationId": "LOC_LIBRARY",
+      "cast": {
+        "CHAR_QINGRAN": "DRY",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "问茶有回应",
+      "picture": "276帧：前238帧同轴二人问答，清然问Q2_D1；住持轻摇头后先说不能确定，再说无名野茶Q2_D2。后38帧硬切案边近景，住持将旧盏放回旧木托、松手；最后轻微拉虚和窗光漫亮。没有双人中景突然高速推至盏口的要求。",
+      "sound": "完整问答先结束才放盏。木托一声轻磕；尾部环境自然转为岩间风声，此段配乐静默。",
+      "transition": "37.5秒切晴天茶树；尾部漫亮只使用本镜现有帧数，不另插白场。",
+      "materials": [
+        {
+          "useFrames": 238,
+          "action": "同一藏经阁二人中景；清然问Q2_D1，住持轻摇头后答完整Q2_D2，答到不能确定后留自然短停顿；旧盏一直在右手。",
+          "id": "Q2_S1_M1",
+          "kind": "video",
+          "startFrame": 624,
+          "endFrame": 862,
+          "useSeconds": 9.916666666666666,
+          "locationId": "LOC_LIBRARY",
+          "cast": {
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q2_D1",
+            "Q2_D2"
+          ]
+        },
+        {
+          "useFrames": 38,
+          "action": "案边固定近景；住持右手将旧盏落在旧木托并松开，盏口磕口可辨；动作尾部浅拉焦、窗光轻漫，不移动到另一场景。",
+          "id": "Q2_S1_M2",
+          "kind": "video",
+          "startFrame": 862,
+          "endFrame": 900,
+          "useSeconds": 1.5833333333333333,
+          "locationId": "LOC_LIBRARY",
+          "cast": {
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 2,
+      "dialogueIds": [
+        "Q2_D1",
+        "Q2_D2"
+      ],
+      "startFrame": 624,
+      "durationFrames": 276,
+      "endFrame": 900,
+      "startSeconds": 26,
+      "endSeconds": 37.5
+    },
+    {
+      "id": "Q2_S2",
+      "sceneId": "SCENE_2",
+      "locationId": "LOC_TREES",
+      "cast": {},
+      "propIds": [
+        "PROP_TREES"
+      ],
+      "title": "茶树晴转雨",
+      "picture": "三丛茶树同构图，前48帧晴暖叶动，后48帧阴雨叶面水珠。时代不变，天气转场暗示时间推移到深秋雨日。",
+      "sound": "风叶声接雨点，雨天端从首帧即有细雨，不让画面已下雨而声音迟到。无人声，此段配乐静默。",
+      "transition": "39.5秒晴雨硬切，41.5秒接山门病倒，雨声跨切连续。",
+      "materials": [
+        {
+          "useFrames": 48,
+          "action": "固定机位，三丛茶树晴天，叶轻摆、岩面较干，严格沿树与岩缝参考。",
+          "id": "Q2_S2_M1",
+          "kind": "video",
+          "startFrame": 900,
+          "endFrame": 948,
+          "useSeconds": 2,
+          "locationId": "LOC_TREES",
+          "cast": {},
+          "propIds": [
+            "PROP_TREES"
+          ],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 48,
+          "action": "同一构图的雨天茶树，岩面深湿、细雨与叶面水珠；不在一条素材里做天气变形。",
+          "id": "Q2_S2_M2",
+          "kind": "video",
+          "startFrame": 948,
+          "endFrame": 996,
+          "useSeconds": 2,
+          "locationId": "LOC_TREES",
+          "cast": {},
+          "propIds": [
+            "PROP_TREES"
+          ],
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 2,
+      "dialogueIds": [],
+      "startFrame": 900,
+      "durationFrames": 96,
+      "endFrame": 996,
+      "startSeconds": 37.5,
+      "endSeconds": 41.5
+    },
+    {
+      "id": "Q2_S3",
+      "sceneId": "SCENE_3",
+      "locationId": "LOC_SICKROOM",
+      "cast": {
+        "CHAR_QINGRAN": "RAIN",
+        "CHAR_ABBOT": "RAIN",
+        "CHAR_DINGXIAN": "SICK_GATE"
+      },
+      "propIds": [
+        "PROP_RESCUE",
+        "PROP_MEDICINE_BOWL"
+      ],
+      "title": "先安置床榻，床边接话后采茶",
+      "picture": "本组444帧18.5秒，原速剪辑省略：72帧山门闻声赶来、扶入的代表片段，48帧切稍后禅房榻边放稳的末段；168帧床侧住持先以18帧目察病人、再用144帧完整说Q2_D4、6帧收声；156帧清然先以22帧看丁显回想并转向、再用124帧完整接Q2_D3，最后10帧开始伸手取篓。提篓余段与出房路程以时间省略接下镜，不要求10帧跨门。转房和卸箱距离也明确省略，不是从跌倒到进房的连续用时实测；床榻安置完成后住持一直留床侧照看。 药碗线索只加在安置完成后的住持说话画面内：清然开场已端碗，听话时放到床侧小几并松手；接话与取篓前已经放妥。扶人不端碗，不新增端碗入房段落或镜长。",
+      "sound": "山门跌倒动静先引出清然赶来和住持跟到，雨与喘息转为禅房窗外闷雨、衣被声。住持先察看后完整Q2_D4，清然在收声后留出看病人与回想的停顿，完整Q2_D3说完才有取篓轻响。取篓声不提前盖台词，下一镜雨声只连接已省略的出门路程。 药碗放上木小几时有轻陶声，压低不盖Q2_D4；放碗声早于清然接话和取篓。",
+      "transition": "60秒由清然语毕开始取篓的动作接九龙窠采茶；提篓余段、出房及山径路程明确省略，不让他在话中已经拿走篮子。住持留床侧，喂茶仍回同一榻。",
+      "materials": [
+        {
+          "id": "Q2_S3_M1",
+          "kind": "video",
+          "useFrames": 72,
+          "action": "山门雨景：丁显背竹编书箱膝软栽倒在湿石阶上；清然闻声从门内快步赶出，住持随后赶到，两人合力扶起丁显、开始扶入寺门。原速取用；下一镜以时间省略略去路程。",
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "SICK_GATE",
+            "CHAR_QINGRAN": "RAIN",
+            "CHAR_ABBOT": "RAIN"
+          },
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "startFrame": 996,
+          "endFrame": 1068,
+          "useSeconds": 3,
+          "dialogueIds": []
+        },
+        {
+          "id": "Q2_S3_M2",
+          "kind": "video",
+          "useFrames": 48,
+          "action": "切到已抵禅房的稍后时刻，书箱已卸靠房内近门墙边；住持已经在床侧扶托，清然床尾协助。只取二人把丁显上身放低到素枕、安置躺稳的末段。结束时住持保持床侧坐姿照看，清然松手退到床尾近门处，不在2秒内再增加住持转身坐下的独立动作。 扶放阶段清然双手用于扶人，不端药碗；药碗仅在安置完成后的切点省略中端起，不另拍端碗入房路程。",
+          "locationId": "LOC_SICKROOM",
+          "cast": {
+            "CHAR_DINGXIAN": "SICK_SETTLING",
+            "CHAR_QINGRAN": "RAIN",
+            "CHAR_ABBOT": "RAIN"
+          },
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "startFrame": 1068,
+          "endFrame": 1116,
+          "useSeconds": 2,
+          "dialogueIds": []
+        },
+        {
+          "id": "Q2_S3_M3",
+          "kind": "video",
+          "useFrames": 168,
+          "locationId": "LOC_SICKROOM",
+          "cast": {
+            "CHAR_DINGXIAN": "SICK_BED",
+            "CHAR_ABBOT": "RAIN",
+            "CHAR_QINGRAN": "RAIN_MEDICINE"
+          },
+          "propIds": [
+            "PROP_RESCUE",
+            "PROP_MEDICINE_BOWL"
+          ],
+          "action": "同一禅房，丁显已躺稳，书箱墙角、竹篓房门内侧；清然在病人安置完成后才端起的深褐药碗已在双手，本条不再演端碗入房。前18帧住持目察面色与呼吸；第18—162帧完整说Q2_D4。清然静听，在这段说话画面内把药碗稳放床侧靠自己一侧的小几并松手；不另占路程，不端碗扶人或取篓。最后6帧药碗已放妥、双手空着，清然继续听，不接话、不离开。",
+          "startFrame": 1116,
+          "endFrame": 1284,
+          "useSeconds": 7,
+          "dialogueIds": [
+            "Q2_D4"
+          ],
+          "sceneReference": {
+            "assetId": "REF_SICKROOM_MEDICINE_V1",
+            "purpose": "开场端碗构图候选",
+            "identityPriority": "病中单人图优先决定丁显病态面孔与湿衣，场景图只定三人/榻/几/碗布局",
+            "humanAdopted": false
+          }
+        },
+        {
+          "id": "Q2_S3_M4",
+          "kind": "video",
+          "useFrames": 156,
+          "action": "药碗已经稳放床侧小几、清然双手空着；同一禅房，第0—22帧清然先垂目看床上丁显，略停回想旧例，再转向住持；第22—146帧原速完整说Q2_D3，台词结束前不取竹篓。第146—156帧只取清然伸手握住房门内侧篮柄、开始提篓的动作开端；不要求10帧完成提篓和跨门。剩余提篓与出房路程在切到崖下前的时间省略中完成，剧情仍是语毕才取篓出门，住持留床侧照看。",
+          "locationId": "LOC_SICKROOM",
+          "cast": {
+            "CHAR_DINGXIAN": "SICK_BED",
+            "CHAR_QINGRAN": "RAIN_AFTER_MEDICINE",
+            "CHAR_ABBOT": "RAIN"
+          },
+          "propIds": [
+            "PROP_RESCUE",
+            "PROP_MEDICINE_BOWL"
+          ],
+          "startFrame": 1284,
+          "endFrame": 1440,
+          "useSeconds": 6.5,
+          "dialogueIds": [
+            "Q2_D3"
+          ],
+          "referenceContinuity": {
+            "fromMaterialId": "Q2_S3_M3",
+            "requiredState": "放碗已完成；药碗在小几，清然双手空着",
+            "matchingFrameAvailable": true,
+            "forbiddenOpeningReference": "REF_SICKROOM_MEDICINE_V1",
+            "preparedFrameAssetId": "REF_SICKROOM_EMPTY_HANDS_V1",
+            "frameOrigin": "reference-image-edit",
+            "actualVideoMatchVerified": false,
+            "humanAdopted": false
+          },
+          "sceneReference": {
+            "assetId": "REF_SICKROOM_EMPTY_HANDS_V1",
+            "role": "prepared-opening-composition",
+            "notActualVideoEndFrame": true
+          }
+        }
+      ],
+      "batchIndex": 2,
+      "dialogueIds": [
+        "Q2_D4",
+        "Q2_D3"
+      ],
+      "startFrame": 996,
+      "durationFrames": 444,
+      "endFrame": 1440,
+      "startSeconds": 41.5,
+      "endSeconds": 60,
+      "locationIds": [
+        "LOC_GATE",
+        "LOC_SICKROOM"
+      ]
+    },
+    {
+      "id": "Q2_S4",
+      "sceneId": "SCENE_3",
+      "locationId": "LOC_TREES",
+      "cast": {
+        "CHAR_QINGRAN": "RAIN",
+        "CHAR_DINGXIAN": "SICK_BED",
+        "CHAR_ABBOT": "RAIN"
+      },
+      "propIds": [
+        "PROP_TREES",
+        "PROP_RESCUE"
+      ],
+      "title": "采茶、煮茶、喂茶",
+      "picture": "连续剧情为清然冒雨采嫩梢、回寺将鲜叶与姜片煎煮，待茶汤温度适宜后回同一禅房一勺一勺喂丁显，住持始终床侧照看。剪辑只取58帧折采入篓、50帧入罐煎煮的代表片段、48帧多次喂茶中的一次吞咽。山径往返、煎煮等待和茶汤降到适宜温度的过程由明确时间省略交代，不把6.5秒当做从采叶到即时喂烫水的连续过程。",
+      "sound": "雨打茶叶与竹篓→灶间柴火水沸→时间省略后的禅房轻陶勺声、缓慢吞咽与呼吸。喂茶段不延续滚沸声，不用汽响暗示烫茶直接入口；住持近旁但无额外台词。",
+      "transition": "66.5秒由同一禅房床榻喂茶切18帧黑场三日后，再回本房第一视角木梁与窗光；字幕延续到主观画面前6帧，总1秒，床榻、枕向与墙边书箱连续。",
+      "materials": [
+        {
+          "useFrames": 58,
+          "action": "九龙窠雨中，只见清然湿袖与手折下一次嫩梢投入同一竹篓，脚踏小径，不攀崖；不出现丁显或灶。",
+          "locationId": "LOC_TREES",
+          "cast": {
+            "CHAR_QINGRAN": "RAIN"
+          },
+          "propIds": [
+            "PROP_TREES",
+            "PROP_RESCUE"
+          ],
+          "id": "Q2_S4_M1",
+          "kind": "video",
+          "startFrame": 1440,
+          "endFrame": 1498,
+          "useSeconds": 2.4166666666666665,
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 50,
+          "action": "寺内灶间，清然把已备鲜叶与姜片放入陶罐煎煮，取入罐及蒸汽柴火的一个原速代表片段；煎煮等待不压成两秒完成。只此灶间，不出现床榻或现代器物。",
+          "locationId": "LOC_ROOM",
+          "cast": {
+            "CHAR_QINGRAN": "RAIN"
+          },
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "id": "Q2_S4_M2",
+          "kind": "video",
+          "startFrame": 1498,
+          "endFrame": 1548,
+          "useSeconds": 2.0833333333333335,
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 48,
+          "action": "以煎煮和待温过程的时间省略回到同一禅房、同一床榻与枕向，住持仍在床侧，书箱仍在墙边。茶汤已适宜入口、碗口只余细微热气；勺内已有温茶，清然勺前稍停再送到丁显唇边，丁显缓慢吞咽。此48帧只取逐勺喂茶中的一个代表动作，不是剧情只喂一勺，不再另塞完整舀汤或浓汽滚沸。 本次使用另一个浅褐茶姜汤碗和陶勺；先前深褐药碗仍留床侧小几，兔毫旧盏不入画。",
+          "locationId": "LOC_SICKROOM",
+          "cast": {
+            "CHAR_QINGRAN": "RAIN",
+            "CHAR_DINGXIAN": "SICK_BED",
+            "CHAR_ABBOT": "RAIN"
+          },
+          "propIds": [
+            "PROP_RESCUE",
+            "PROP_MEDICINE_BOWL"
+          ],
+          "id": "Q2_S4_M3",
+          "kind": "video",
+          "startFrame": 1548,
+          "endFrame": 1596,
+          "useSeconds": 2,
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 3,
+      "dialogueIds": [],
+      "startFrame": 1440,
+      "durationFrames": 156,
+      "endFrame": 1596,
+      "startSeconds": 60,
+      "endSeconds": 66.5
+    },
+    {
+      "id": "Q3_S1",
+      "sceneId": "SCENE_3",
+      "locationId": "LOC_SICKROOM",
+      "cast": {
+        "CHAR_DINGXIAN": "RECOVERED",
+        "CHAR_QINGRAN": "DRY"
+      },
+      "propIds": [
+        "PROP_RESCUE"
+      ],
+      "title": "三日后，院中致谢",
+      "picture": "三日后240帧：18帧代码黑场，15帧主观木梁与窗光，24帧穿戴整齐、起身近完成后的提箱尾段，183帧院中完整谢辞。三日后字幕黑场起并延至主观画面前6帧，共1秒。正文完整保留从榻边起身取墙边书箱；执行可用原速时间省略截其尾段及省略背箱出房。院中开场丁显刚停步，随首句躬身行礼，不另塞走完全程和行礼等待，不抢词。",
+      "sound": "清晨鸟、布被、书箱背带、院中翻茶细响；谢辞必须面对已经见到的清然说，略虚弱、不抢词。",
+      "transition": "76.5秒接同日午后山门告别，时段变化是时间省略，不强求晨光与午后光完全相同。",
+      "materials": [
+        {
+          "useFrames": 18,
+          "action": "代码纯黑18帧，后期叠加三日后字幕；字幕再延续到第一视角前6帧，总共24帧1秒，无额外加时。",
+          "kind": "code",
+          "cast": {},
+          "propIds": [],
+          "id": "Q3_S1_BLACK",
+          "startFrame": 1596,
+          "endFrame": 1614,
+          "useSeconds": 0.75,
+          "locationId": "LOC_ROOM",
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 15,
+          "action": "丁显醒来的第一视角，清楚看见同一禅房木梁与窗边清晨柔光的一瞥；保持画面稳定，不另塞黑眼皮开合或大幅由虚到清动画。15帧可读性仍待播放验证。",
+          "cast": {},
+          "propIds": [],
+          "id": "Q3_S1_M1",
+          "kind": "video",
+          "startFrame": 1614,
+          "endFrame": 1629,
+          "useSeconds": 0.625,
+          "locationId": "LOC_SICKROOM",
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 24,
+          "action": "同一禅房第三视角，丁显已穿戴整齐、起身将近完成，原速取右手把书箱提离墙边的尾段，24帧。之后背箱出门的过程以时间省略带过。",
+          "cast": {
+            "CHAR_DINGXIAN": "RECOVERED"
+          },
+          "id": "Q3_S1_M2",
+          "kind": "video",
+          "startFrame": 1629,
+          "endFrame": 1653,
+          "useSeconds": 1,
+          "locationId": "LOC_SICKROOM",
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 183,
+          "action": "檐廊旁晒茶院地，清然在翻竹匾中的茶叶。开头丁显已背书箱刚停步在两步外，随首句躬身行礼，清然停手直身。丁显原速完整说Q3_D1，说完收礼。",
+          "locationId": "LOC_GATE",
+          "id": "Q3_S1_M3",
+          "kind": "video",
+          "startFrame": 1653,
+          "endFrame": 1836,
+          "useSeconds": 7.625,
+          "cast": {
+            "CHAR_DINGXIAN": "RECOVERED",
+            "CHAR_QINGRAN": "DRY"
+          },
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "dialogueIds": [
+            "Q3_D1"
+          ]
+        }
+      ],
+      "batchIndex": 3,
+      "dialogueIds": [
+        "Q3_D1"
+      ],
+      "startFrame": 1596,
+      "durationFrames": 240,
+      "endFrame": 1836,
+      "startSeconds": 66.5,
+      "endSeconds": 76.5
+    },
+    {
+      "id": "Q3_S2",
+      "sceneId": "SCENE_3",
+      "locationId": "LOC_GATE",
+      "cast": {
+        "CHAR_DINGXIAN": "RECOVERED",
+        "CHAR_QINGRAN": "DRY",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [
+        "PROP_RESCUE"
+      ],
+      "title": "山门送行，远去成点，薄雪接次春",
+      "picture": "同一固定山门构图6.5秒：72帧清然与住持一起送丁显、清然完整Q3_D2，24帧远处人影绕岩消失并留末6帧空山径，30帧薄雪空门、30帧次春远处红袍归来。只取正常速度片段和静态季节画面，前后远路通过时间省略，所有指定转场保留。",
+      "sound": "清然完整Q3_D2，近脚步渐远，远去末段收风；冬端静风，春端轻鸟与远处脚步/极轻锣鼓。无额外台词。",
+      "transition": "80.5秒远去空门切薄雪，81.75秒同构图切次春，83秒切门内报喜并省略最后进门路程。",
+      "materials": [
+        {
+          "useFrames": 72,
+          "action": "固定山门构图。清然与住持并立门内，丁显在门外，取告别的末段。清然完整说Q3_D2，丁显点头，转身走下石阶。原速，只剪去开口前和下阶后的等待。",
+          "id": "Q3_S2_M1",
+          "kind": "video",
+          "startFrame": 1836,
+          "endFrame": 1908,
+          "useSeconds": 3,
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "RECOVERED",
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "dialogueIds": [
+            "Q3_D2"
+          ]
+        },
+        {
+          "useFrames": 24,
+          "action": "同一固定构图，用时间省略切到丁显已经是远处小点且接近岩角；取其绕岩消失的末段，最后6帧明确留空山径再接薄雪。不在24帧里重复从近处走远的全程。",
+          "cast": {
+            "CHAR_DINGXIAN": "RECOVERED"
+          },
+          "id": "Q3_S2_M2",
+          "kind": "video",
+          "startFrame": 1908,
+          "endFrame": 1932,
+          "useSeconds": 1,
+          "locationId": "LOC_GATE",
+          "propIds": [
+            "PROP_RESCUE"
+          ],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 30,
+          "action": "同一固定空门，冬日薄雪覆瓦阶，轻雪落下，无人物。取清楚可辨的静态季节画面。",
+          "cast": {},
+          "id": "Q3_S3_M1",
+          "kind": "video",
+          "startFrame": 1932,
+          "endFrame": 1962,
+          "useSeconds": 1.25,
+          "locationId": "LOC_GATE",
+          "propIds": [],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 30,
+          "action": "次春同机位门景，雪尽新叶，暗红袍丁显和随从在远处正常走一两步，距门仍远；下一镜省略最后路程，不在1.25秒内走到门口。",
+          "id": "Q3_S3_M2",
+          "kind": "video",
+          "startFrame": 1962,
+          "endFrame": 1992,
+          "useSeconds": 1.25,
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "SCHOLAR"
+          },
+          "propIds": [],
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 3,
+      "dialogueIds": [
+        "Q3_D2"
+      ],
+      "startFrame": 1836,
+      "durationFrames": 156,
+      "endFrame": 1992,
+      "startSeconds": 76.5,
+      "endSeconds": 83,
+      "sceneIds": [
+        "SCENE_3",
+        "SCENE_4"
+      ],
+      "sourceShotIds": [
+        "Q3_S2",
+        "Q3_S3"
+      ]
+    },
+    {
+      "id": "Q3_S4",
+      "sceneId": "SCENE_4",
+      "locationId": "LOC_GATE",
+      "cast": {
+        "CHAR_DINGXIAN": "SCHOLAR",
+        "CHAR_QINGRAN": "DRY",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [],
+      "title": "寺门报喜",
+      "picture": "门内同轴中景共6秒：120帧直接从跨门末段起，站定后完整说Q3_D3；24帧行揖收束，清然与住持沿用站位。删除进门前等待和揖前后留白，不删字、不缩短原对白声音窗口。门外随从与箱笼不进院。末帧丁显仍揖低，住持未指路。",
+      "sound": "近场报喜、粗绢与步靴轻响；门洞风鸟底声延续，不叠崖缝声。",
+      "transition": "89秒仍同地点、同轴、同光接住持回答；批次边界不换场。",
+      "materials": [
+        {
+          "useFrames": 120,
+          "action": "寺门内同轴中景，开场直接取丁显跨门将结束的动作片段、站定，对住持完整说Q3_D3；不另留一秒走路等待。清然抱匾左前景，住持看他，随从箱笼留门外。",
+          "id": "Q3_S4_M1",
+          "kind": "video",
+          "startFrame": 1992,
+          "endFrame": 2112,
+          "useSeconds": 5,
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "SCHOLAR",
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [],
+          "dialogueIds": [
+            "Q3_D3"
+          ]
+        },
+        {
+          "useFrames": 24,
+          "action": "接同轴同站位，丁显说完双手合起，取行揖收束动作，末帧揖最低点；住持等他直身，不提前指路。原速，不拉长鞠躬停留。",
+          "id": "Q3_S4_M2",
+          "kind": "video",
+          "startFrame": 2112,
+          "endFrame": 2136,
+          "useSeconds": 1,
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "SCHOLAR",
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [],
+          "dialogueIds": []
+        }
+      ],
+      "batchIndex": 3,
+      "dialogueIds": [
+        "Q3_D3"
+      ],
+      "startFrame": 1992,
+      "durationFrames": 144,
+      "endFrame": 2136,
+      "startSeconds": 83,
+      "endSeconds": 89
+    },
+    {
+      "id": "Q4_S1",
+      "sceneId": "SCENE_4",
+      "locationId": "LOC_GATE",
+      "cast": {
+        "CHAR_DINGXIAN": "SCHOLAR",
+        "CHAR_QINGRAN": "DRY",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [],
+      "title": "同场接话，答完引路",
+      "picture": "承接丁显揖最低点，前12帧直身。住持完整答Q4_D1，末14帧才向门外示意并侧身引路；不得在答话中切到九龙窠。",
+      "sound": "门洞风、院鸟、衣料与住持近场声音；沿前镜同一底声，不随批次断开。",
+      "transition": "95秒住持完整答话并示意后，硬切同日稍后九龙窠，省略步行路程。",
+      "materials": [
+        {
+          "useFrames": 144,
+          "action": "同一寺门院廊、同轴站位与春日光线。丁显从揖中直身，住持完整说Q4_D1，答完才示意引路；清然抱匾、门外随从均维持位置。",
+          "id": "Q4_S1_M1",
+          "kind": "video",
+          "startFrame": 2136,
+          "endFrame": 2280,
+          "useSeconds": 6,
+          "locationId": "LOC_GATE",
+          "cast": {
+            "CHAR_DINGXIAN": "SCHOLAR",
+            "CHAR_QINGRAN": "DRY",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [],
+          "dialogueIds": [
+            "Q4_D1"
+          ]
+        }
+      ],
+      "batchIndex": 4,
+      "dialogueIds": [
+        "Q4_D1"
+      ],
+      "startFrame": 2136,
+      "durationFrames": 144,
+      "endFrame": 2280,
+      "startSeconds": 89,
+      "endSeconds": 95
+    },
+    {
+      "id": "Q4_S2",
+      "sceneId": "SCENE_4",
+      "locationId": "LOC_TREES",
+      "cast": {
+        "CHAR_DINGXIAN": "SCHOLAR",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [
+        "PROP_TREES",
+        "PROP_ROBE"
+      ],
+      "title": "丁显亲披红袍，茶得其名",
+      "picture": "11秒分同场景三条动作素材：78帧本人解带放平岩、解领褪外袍，Q4_D2与动作并行；48帧本人双手将红袍覆在可触及的主丛枝上；138帧退半步成揖、住持说Q4_D3、末尾山风动红袍。住持在画右后方，不碰袍。中单厚实完整，帽靴不变。革带不在这11秒里重系。",
+      "sound": "丁显Q4_D2，住持Q4_D3，各一条；革带、粗绢与落枝声随画面，末尾风与布声。",
+      "transition": "106秒从崖下红袍已披树、丁显行揖切回寺院茶桌；归寺省略中取回革带束在白中单外，红袍仍留树。",
+      "materials": [
+        {
+          "useFrames": 78,
+          "action": "崖下稳定中景，丁显本人解下革带放在近旁平岩、解领褪双袖，把暗红外袍握在双手；Q4_D2与此动作并行，白中单完整不透，住持侧后方旁观。",
+          "id": "Q4_S2_M1",
+          "kind": "video",
+          "startFrame": 2280,
+          "endFrame": 2358,
+          "useSeconds": 3.25,
+          "locationId": "LOC_TREES",
+          "cast": {
+            "CHAR_DINGXIAN": "SCHOLAR",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_TREES",
+            "PROP_ROBE"
+          ],
+          "dialogueIds": [
+            "Q4_D2"
+          ]
+        },
+        {
+          "useFrames": 48,
+          "action": "同崖下、同轴动作近景接丁显手持整件袍，把暗红外袍轻覆到主茶丛枝上、松手；无跨地步行，不让袍凭空跳到树上。",
+          "cast": {
+            "CHAR_DINGXIAN": "ROBE_IN_HAND"
+          },
+          "id": "Q4_S2_M2",
+          "kind": "video",
+          "startFrame": 2358,
+          "endFrame": 2406,
+          "useSeconds": 2,
+          "locationId": "LOC_TREES",
+          "propIds": [
+            "PROP_TREES",
+            "PROP_ROBE"
+          ],
+          "dialogueIds": []
+        },
+        {
+          "useFrames": 138,
+          "action": "同场景较宽景，红袍已在主丛，丁显白中单、革带尚在岩面，退半步行揖；住持侧后方完整说Q4_D3，最后一秒只留风动红袍；住持始终不碰袍。",
+          "cast": {
+            "CHAR_DINGXIAN": "ROBE_ON_TREE",
+            "CHAR_ABBOT": "DRY"
+          },
+          "id": "Q4_S2_M3",
+          "kind": "video",
+          "startFrame": 2406,
+          "endFrame": 2544,
+          "useSeconds": 5.75,
+          "locationId": "LOC_TREES",
+          "propIds": [
+            "PROP_TREES",
+            "PROP_ROBE"
+          ],
+          "dialogueIds": [
+            "Q4_D3"
+          ]
+        }
+      ],
+      "batchIndex": 4,
+      "dialogueIds": [
+        "Q4_D2",
+        "Q4_D3"
+      ],
+      "startFrame": 2280,
+      "durationFrames": 264,
+      "endFrame": 2544,
+      "startSeconds": 95,
+      "endSeconds": 106
+    },
+    {
+      "id": "Q4_S3",
+      "sceneId": "SCENE_4",
+      "locationId": "LOC_TEA_TABLE",
+      "cast": {
+        "CHAR_DINGXIAN": "TEA_TABLE",
+        "CHAR_ABBOT": "DRY"
+      },
+      "propIds": [
+        "PROP_OLD_CUP"
+      ],
+      "title": "回寺斟茶，茶汤承古今",
+      "picture": "共6.5秒：108帧茶桌二人，开场住持已经拿起清洁旧盏，斟已泡茶汤并轻推给丁显；48帧古盏浅琥珀液面自然波纹。只删取盏前等待，Q4_D4完整声音不压缩，连续覆盖液面；丁显白中单外革带已束好，旧盏不赠。",
+      "sound": "Q4_D4从本镜开头约7帧后开始，连续覆盖两个画面；注茶、盏底木桌声与院鸟。",
+      "transition": "112.5秒古盏液面硬切现代白瓷杯，匹配屏幕位置、尺度、波纹与茶汤色，不做跨时代器物或人物变形。",
+      "materials": [
+        {
+          "useFrames": 108,
+          "action": "同寺中古树下茶桌，住持左、丁显右，丁显白中单外革带已束。开场住持已从手边木托拿起清洁旧盏，省略拿取前的等待；陶壶斟已泡茶汤、沿桌轻推，丁显轻扶盏。Q4_D4完整声音连续延到液面段，不变速。",
+          "id": "Q4_S3_M1",
+          "kind": "video",
+          "startFrame": 2544,
+          "endFrame": 2652,
+          "useSeconds": 4.5,
+          "locationId": "LOC_TEA_TABLE",
+          "cast": {
+            "CHAR_DINGXIAN": "TEA_TABLE",
+            "CHAR_ABBOT": "DRY"
+          },
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q4_D4"
+          ]
+        },
+        {
+          "useFrames": 48,
+          "action": "寺中古盏液面固定特写，浅琥珀茶汤轻漾，兔毫纹与同一磕口为参考；只拍器物，无现代杯或人物脸，Q4_D4余句作画外声接同一条录音。",
+          "cast": {},
+          "id": "Q4_S3_M2",
+          "kind": "video",
+          "startFrame": 2652,
+          "endFrame": 2700,
+          "useSeconds": 2,
+          "locationId": "LOC_TEA_TABLE",
+          "propIds": [
+            "PROP_OLD_CUP"
+          ],
+          "dialogueIds": [
+            "Q4_D4"
+          ]
+        }
+      ],
+      "batchIndex": 4,
+      "dialogueIds": [
+        "Q4_D4"
+      ],
+      "startFrame": 2544,
+      "durationFrames": 156,
+      "endFrame": 2700,
+      "startSeconds": 106,
+      "endSeconds": 112.5
+    },
+    {
+      "id": "Q4_S4",
+      "sceneId": "SCENE_5",
+      "locationId": "LOC_MODERN",
+      "cast": {
+        "CHAR_MODERN_WOMAN": "MODERN"
+      },
+      "propIds": [
+        "PROP_WHITE_CUP"
+      ],
+      "title": "现代饮茶，一脉千年",
+      "picture": "共7.5秒：48帧现代白瓷杯液面接古盏，60帧同一双手放杯动作末段，72帧女子端饮一小口、持杯到胸前望窗外。仅删放杯前悬停留白，Q4_D5完整旁白声音保留原窗口长度；女子不说话，饮茶时嘴唇自然活动。",
+      "sound": "Q4_D5独立画外旁白；杯与木托、亚麻、呼吸和窗外淡鸟，音乐尾端自然归零。",
+      "transition": "120秒结束，无120秒之后的片尾黑场或新增定版。",
+      "materials": [
+        {
+          "useFrames": 48,
+          "action": "现代白瓷杯浅琥珀液面固定特写，杯由女子双手稳定持于桌面上方、手仅边缘可见；按古侧液面屏幕位置和尺度匹配，不出现旧盏。",
+          "id": "Q4_S4_M1",
+          "kind": "video",
+          "startFrame": 2700,
+          "endFrame": 2748,
+          "useSeconds": 2,
+          "locationId": "LOC_MODERN",
+          "cast": {
+            "CHAR_MODERN_WOMAN": "MODERN"
+          },
+          "propIds": [
+            "PROP_WHITE_CUP"
+          ],
+          "dialogueIds": [
+            "Q4_D5"
+          ]
+        },
+        {
+          "useFrames": 60,
+          "action": "同一双手和米白袖口，直接取白瓷杯正下降到木托的动作末段、接触托盘并松手，不留放杯前的悬停等待；小幅后移带出桌与上身，原速。",
+          "id": "Q4_S4_M2",
+          "kind": "video",
+          "startFrame": 2748,
+          "endFrame": 2808,
+          "useSeconds": 2.5,
+          "locationId": "LOC_MODERN",
+          "cast": {
+            "CHAR_MODERN_WOMAN": "MODERN"
+          },
+          "propIds": [
+            "PROP_WHITE_CUP"
+          ],
+          "dialogueIds": [
+            "Q4_D5"
+          ]
+        },
+        {
+          "useFrames": 72,
+          "action": "固定中景，同女子同杯同桌；右手从木托端杯至唇边、自然饮一小口，杯降到胸前，视线望窗外。动作克制，不同时塞第二次放杯或闭眼动作；无说话口型。",
+          "id": "Q4_S4_M3",
+          "kind": "video",
+          "startFrame": 2808,
+          "endFrame": 2880,
+          "useSeconds": 3,
+          "locationId": "LOC_MODERN",
+          "cast": {
+            "CHAR_MODERN_WOMAN": "MODERN"
+          },
+          "propIds": [
+            "PROP_WHITE_CUP"
+          ],
+          "dialogueIds": [
+            "Q4_D5"
+          ]
+        }
+      ],
+      "batchIndex": 4,
+      "dialogueIds": [
+        "Q4_D5"
+      ],
+      "startFrame": 2700,
+      "durationFrames": 180,
+      "endFrame": 2880,
+      "startSeconds": 112.5,
+      "endSeconds": 120
+    }
+  ],
+  "transitions": [
+    {
+      "id": "T1",
+      "cutFrame": 480,
+      "from": "Q1_S3_M2",
+      "to": "Q1_S4_M1",
+      "rule": "朱熹举盏→少年拿旧盏；两端各自固定紧景，杯的位置尺度与上行动势匹配，人物不跨时代变形。"
+    },
+    {
+      "id": "T2",
+      "cutFrame": 948,
+      "from": "Q2_S2_M1",
+      "to": "Q2_S2_M2",
+      "rule": "九龙窠三丛茶树同构图晴→雨；只变天气光线，不变岩壁和树位。"
+    },
+    {
+      "id": "T3",
+      "cutFrame": 1932,
+      "additionalCutFrames": [
+        1962,
+        1992
+      ],
+      "from": "Q3_S2_M2",
+      "to": "Q3_S3_M1",
+      "rule": "同门送行远去成点/空门→80.5秒薄雪→81.75秒次春远处归来，83秒切门内并省略最后路程。"
+    },
+    {
+      "id": "T4",
+      "cutFrame": 2700,
+      "from": "Q4_S3_M2",
+      "to": "Q4_S4_M1",
+      "rule": "古盏茶汤→现代白瓷杯液面；独立素材硬切，按画面可见位置尺度、色调与波纹方向匹配，不用无法由720p画面证实的1毫米指标。"
+    }
+  ],
+  "post": {
+    "captions": [
+      {
+        "startFrame": 0,
+        "endFrame": 72,
+        "text": "南宋淳熙十年（1183）",
+        "type": "年代"
+      },
+      {
+        "startFrame": 0,
+        "endFrame": 96,
+        "text": "据武夷山民间传说改编",
+        "type": "题材说明，小字号上角，与年代分区"
+      },
+      {
+        "startFrame": 480,
+        "endFrame": 552,
+        "text": "明洪武年间",
+        "type": "年代"
+      },
+      {
+        "startFrame": 900,
+        "endFrame": 996,
+        "text": "大红袍的故事",
+        "type": "片名"
+      },
+      {
+        "startFrame": 1596,
+        "endFrame": 1620,
+        "text": "三日后",
+        "type": "黑场18帧后延续至睁眼画面前6帧，共1秒"
+      },
+      {
+        "startFrame": 1962,
+        "endFrame": 1992,
+        "text": "次年春",
+        "type": "季节"
+      },
+      {
+        "startFrame": 2752,
+        "endFrame": 2800,
+        "text": "现代·武夷山茶室",
+        "type": "地点小字"
+      }
+    ],
+    "subtitles": "16句对白和旁白全部按逐字表制后期字幕，以正式录音断句切条，完整保留标点和措辞。思源宋体常规、720p约28像素起调，底部安全区用淡描边；最多两行，不遮嘴、液面匹配区或红袍关键动作。年代、片名与对白字幕分区；题材说明置上角。每个字的实际入出点待录音后对齐，不把纸面窗口当已完成字幕。",
+    "marks": "如素材来自会附平台标识的服务，交付时保留实际标识，不裁切遮挡；本轮不生成或伪造平台标识，也不自行新增片尾logo。",
+    "music": "纯代码无歌词器乐乐床方案：稀疏拨弦、气声长音、轻低音，约58BPM。0—20秒溪畔稀疏，20—26秒旧盏收束，26—41.5秒问答晴雨留环境静默；41.5—60秒扶救床侧低位、Q2_D4/Q2_D3时再压低；60—76.5秒采茶、康复柔和铺底；76.5—83秒门景冷转暖；83—95秒报喜答话稀疏；95—106秒披袍气声轻入；106—112.5秒茶桌拨弦；112.5—120秒现代收束、117—120秒淡出。只是方案，未生成音频。",
+    "mixing": "声音层分开：对白/旁白、环境、拟音、代码乐床。对白优先，乐床通常比人声低约18—24dB作为初始相对增益；同场批次接缝底声连续，换地点允许自然变化，雨声不能淹字。48kHz立体声；终混可先以约−16LUFS、真峰值不高于−1dBTP为工作目标，实际试听与测量后决定。上述值均非已经达到的实测结果。",
+    "color": "交付Rec.709。全片共享基础色彩方向，允许逐镜曝光、白平衡和肤色校正，以实际镜头匹配为准；撤销旧稿一面要求逐镜匹配一面禁止逐镜调色的冲突。古今液面重点匹配屏幕亮度与茶汤色，不强求不同自然光下完全无差的物理白平衡。",
+    "edit": "24fps、1280×720，总计2880帧/120秒。A段0—60秒7个分镜组，B段60—120秒8个分镜组。固定山门送行与冬春过渡合组，不删情节；现为15组，字幕与声音为16句。26/34/29/31秒四批仅为分组，Q2_S4源ID保留但纳入第3批。89秒寺门内接住持回答，95秒答完才切崖下，106秒归寺茶桌，112.5秒古今液面硬切，120秒止。黑场在Q3_S1内，字幕按现有时间叠加，不加片尾；动作和声音正常速度，指定距离与前后等待用剪辑省略。"
+  },
+  "dialoguePolicy": {
+    "originalFrozenCount": 15,
+    "additionalApprovedIds": [
+      "Q2_D4"
+    ],
+    "totalCount": 16,
+    "totalChineseCharacters": 285,
+    "idNote": "旧15句保留原ID，新增住持句编号Q2_D4；实际演出顺序是Q2_D4在Q2_D3之前。Q2_D1/Q2_D2始终在病倒之前的藏经阁，不移入救人段。"
+  },
+  "sceneNarrative": [
+    "第一场，武夷精舍外溪石（0—20秒）。蔡元定劝歇，朱熹以茶喻学，说茶自会有名字；举盏固定紧景接明代少年拿旧盏。",
+    "第二场，古寺旧盏与九龙窠茶树（20—41.5秒）。住持交代旧盏流传，清然问朱先生是否喝过崖上茶，住持先答不能确定，再说无名野茶。Q2_D1/Q2_D2只在这段病倒之前的藏经阁问答。放盏后茶树同构图晴转雨。",
+    "第三场 山径风雨・茶汤救人\n【画面】深秋黄昏，冷雨淅沥。书生丁显背着竹编书箱，沿山径踉跄走到寺门前，终于支撑不住，栽倒在湿石阶上。\n释清然闻声赶来，与住持一起将丁显扶进寺内。\n【画面】禅房内，丁显已经安置在床上，面色苍白，呼吸急促。书箱放在墙边。住持坐在床边察看，清然在旁端着一只朴素药碗。药碗是安置丁显后才端起的，扶人时清然双手用于扶人。住持说话时，清然把药碗放到床侧小几上；随后看病人、说采茶动机和取竹篓时，药碗已经放妥。\n住持：风寒入体，加上路途劳顿，普通汤药见效太慢。\n清然看了看床上的丁显，想起往年山民用茶的旧例，转向住持。\n释清然：师父，往年山民受凉，都喝那几株茶。我去采些来！\n【画面】清然取过竹篓，转身出门。住持留在床边，继续照看丁显。\n【画面】九龙窠崖下，细雨打在茶叶上。清然冒雨来到茶丛前，伸手采下嫩梢，放进竹篓。\n【画面】回到寺中灶间，清然将鲜叶与姜片放入陶罐煎煮，柴火微亮，热气升起。\n【画面】禅房榻边，清然端来茶汤，待温度适宜后，一勺一勺喂到丁显口中。丁显缓缓吞咽，住持仍在旁照看。\n【黑场，字幕：三日后】\n【画面】清晨，丁显从睡梦中醒来。第一视角看见禅房木梁与窗边柔光。\n切第三视角。他穿戴整齐，从榻边起身，取过墙边的书箱。\n【画面】院中，清然正在翻晒竹匾里的茶叶。丁显背着书箱走来，在他面前停下，躬身行礼。\n丁显：多谢小师父救命之恩。在下丁显，此番是赴京赶考，不想竟病倒于此，此番若能金榜题名，必定重返武夷山，报答救命之恩。\n【画面】寺门前，清然与住持送丁显出门。\n释清然：路上当心。\n丁显点头，转身走下石阶，沿山径远去。\n【转场】固定庙门构图，以时间省略接远处渐小的身影，直至山径空下来。随后同一庙门覆上薄雪，再转为次年春日，承接红袍归来的丁显。\n\n执行说明：本场含送行至次春的接续转场。正文按上述连续剧情；搬扶进房、山径往返、煎煮与待温、起身取箱以及离开走远可用清楚的原速剪辑省略。镜头只取多次喂茶中的一次代表动作，不把剧情改成只喂一勺。纸面帧表尚未声画实测。",
+    "第四场，次春归来与红袍得名（83—112.5秒）。承接前场固定庙门转场的次春归来，83秒省略最后路程切入寺门报喜；89秒住持仍在同场回答，95秒答完才到崖下。丁显亲脱自己的红袍披树，住持说大红袍之名。106秒回寺茶桌，革带已在中单外重系，红袍留树；旧盏斟茶不赠送，液面承接现代。",
+    "第五场，现代茶室（112.5—120秒）。独立白瓷杯液面接古盏，同一女子放杯、再饮一口，持杯望窗外。独立画外旁白保留千年，女子不说话，120秒止。"
+  ],
+  "cameraPolicy": {
+    "source": "user-directive",
+    "message": "尽量不要出现推镜头，以定镜头为主",
+    "rule": "以三脚架固定机位为默认：单镜内保持机位、焦距、景别和构图稳定，不主动推近或拉远，不做光学变焦、数码放大、横移、摇镜、环绕或手持漂移。镜头变化优先通过独立定镜头之间硬切完成；人物和道具自然运动不受限制。只有明确叙事必要且单独标注时才考虑少量运镜。对白镜头优先三分之四正面，嘴部无遮挡，人物头部和布巾留在安全构图内。",
+    "scope": "Future requests; existing generated clips preserved; no paid regeneration",
+    "appliedCompiledPrompts": 38
+  }
+}

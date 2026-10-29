@@ -1,0 +1,19 @@
+{
+  "name": "previzcam-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local stdio MCP server for the PrevizCam browser workspace",
+  "engines": { "node": ">=22.19.0" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test ../tests/commands.test.mjs ../tests/bridge.test.mjs",
+    "validate": "node validate.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "ws": "8.22.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": { "@modelcontextprotocol/client": "2.4.0" }
+}
