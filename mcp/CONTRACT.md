@@ -6,6 +6,8 @@
 
 先调用 `list_workspaces({})`，按用户正在使用的项目选择 `workspaceId`。多个页面时不能猜测第一个就是目标。后续调用都传 `workspaceId`。
 
+`create_project({workspaceId, name, replace?})` 在页面创建一个空项目（默认相机、空剧本与空镜头表；模型稍后由用户手动导入）。当前项目已有内容（镜头、人物、剧本、锚点或内嵌模型）时报 `PROJECT_EXISTS`，只有用户明确同意丢弃后才带 `replace: true` 重试。页面初始就是一个空工作区，未打开项目时可直接创建。允许与本机已有项目重名；创建成功返回 `{name, revision}`，本机项目列表会出现该项目。用户要求"创建项目/新建项目"时使用本工具；不要引导用户手动新建，也不要伪造创建结果。
+
 `get_context({workspaceId, spatial?})` 返回正式 `project`、不透明 `revision`、实际 `spatialContext`、可编辑模板 `previsPlan`、草案摘要和 `activity`。`activity` 非空表示正在渲染、导出或人工预览；此时可读取状态，写入和渲染会自动等待空闲（见常见错误）。`spatialContext` 默认是摘要：语义分组、整体与分组包围盒、锚点、人物、镜头、相机和网格统计（`meshes.total`、`meshes.groups`），不列出上千条网格。需要具体网格时传 `spatial: {detail: "full", meshQuery?: 名称片段, meshGroup?: 语义分组 ID, meshLimit?: 1–200, meshOffset?: 起始, meshSort?: "size"|"name"}`，返回 `meshes.items`、`matched` 与 `nextOffset` 分页继续。
 
 页面是项目权威来源。不要直接修改 IndexedDB、导出的 JSON 文件或仓库源码来绕过网站的草案审核。断线后先重新列出工作区。页面刷新会产生新的工作区 ID，旧草案不会自动恢复。

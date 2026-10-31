@@ -477,6 +477,8 @@ dialog::backdrop { background: rgba(69, 67, 76, 0.35); backdrop-filter: blur(2px
 .error-text { color: var(--danger); font-size: 12px; line-height: 1.8; white-space: pre-wrap; margin: 10px 0; }
 .success-text { color: var(--ok); font-size: 12px; line-height: 1.8; }
 .source-list { display: grid; gap: 7px; max-height: 390px; overflow-y: auto; }
+.source-group-title { font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.source-item:has(input:disabled) { opacity: 0.45; }
 .source-item {
   display: flex; align-items: flex-start; gap: 12px;
   border: 1px solid var(--border); background: var(--bg);

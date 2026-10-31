@@ -52,7 +52,7 @@ SHOT_GUEST_2 缺 t=0、0.5、1；SHOT_GUEST_3 缺 t=0、0.5、1。
 
 这条约束的作用是防止 Agent 不看画面就提交。**不要用「重复提交试错」绕过它**，缺什么就补拍什么。
 
-## 12 个工具
+## 13 个工具
 
 只读工具（`readOnlyHint`）不改变任何状态：
 
@@ -69,6 +69,7 @@ SHOT_GUEST_2 缺 t=0、0.5、1；SHOT_GUEST_3 缺 t=0、0.5、1。
 
 | 工具 | 用途 |
 |---|---|
+| `create_project` | 在页面创建空项目；非空工作区需用户同意后带 `replace: true` |
 | `create_draft` | 从当前正式项目克隆一份独立草案 |
 | `update_draft` | **整体替换** plan，需 `expectedVersion` |
 | `submit_draft` | 提交供人审阅（**不应用**） |

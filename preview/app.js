@@ -1,5 +1,5 @@
 import { SceneView } from './scene.js';
-import { clone, clamp, uid, createProject, createEmptyProject, validateProject, materialList, sampleCamera, sampleTrack, shotAt, totalDuration, timecode, lensToFov, fovToLens, cameraPlan, applyCameraPlan, sampledTimeline, policyWarnings, captureToKeyframes } from './core.mjs';
+import { clone, clamp, uid, createProject, createEmptyProject, isEmptyWorkspace, validateProject, materialList, sampleCamera, sampleTrack, shotAt, totalDuration, timecode, lensToFov, fovToLens, cameraPlan, applyCameraPlan, sampledTimeline, policyWarnings, captureToKeyframes } from './core.mjs';
 import { listProjects, loadProject, saveProject, removeProject, loadActiveId, saveActiveId, migrateLegacyWorkspace, download, toBase64, fromBase64 } from './storage.mjs';
 import { zipSync, strToU8 } from '../vendor/libs/fflate.module.js';
 import { ProjectCommands, editProject, refuse } from './commands.mjs';
@@ -368,9 +368,11 @@ async function exportProject() {
   const bundle = clone(project); if (modelBytes) bundle.embeddedModel = { mimeType: 'model/gltf-binary', base64: await toBase64(modelBytes) };
   download(bundle, 'previzcam-project.json'); toast('预演项目已下载，包含剧本、机位、人物与自定义模型。');
 }
-async function openProjectFile(file) {
+async function openProjectFile(file, nameOverride) {
   if (!file) return; if (file.size > 150 * 1024 * 1024) throw new Error('项目文件超过 150 MB。');
-  const data = JSON.parse((await file.text()).replace(/^\uFEFF/, '')); validateProject(data);
+  const data = JSON.parse((await file.text()).replace(/^\uFEFF/, ''));
+  if (nameOverride) data.name = nameOverride; // 文件夹导入：项目名跟文件夹走，文件内容其余保持原样
+  validateProject(data);
   let bytes = null;
   if (data.scene.source === 'embedded') { if (!data.embeddedModel?.base64) throw new Error('项目缺少内嵌 GLB，无法还原场景。'); bytes = fromBase64(data.embeddedModel.base64); }
   delete data.embeddedModel;
@@ -429,6 +431,97 @@ function openNewProjectDialog() {
     const name = $('new-project-name').value.trim() || '新建项目';
     try { await newProject(name); closeDialog(); } catch (error) { toast(error.message); }
   });
+}
+
+// 「打开项目文件夹」：选一个文件夹 → 递归扫描 GLB / 剧本 JSON / 预演项目文件 →
+// 弹窗勾选加载。项目在点击「加载选中项」时才创建（名字跟文件夹走），
+// 什么都不选直接关闭则不留下任何东西。
+const FOLDER_SCAN_LIMIT = 2000, MODEL_SIZE_LIMIT = 100 * 1024 * 1024, SCRIPT_SIZE_LIMIT = 10 * 1024 * 1024, PROJECT_SIZE_LIMIT = 150 * 1024 * 1024;
+const fmtSize = bytes => bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.ceil(bytes / 1024)} KB`;
+async function openProjectFolder() {
+  if (!window.showDirectoryPicker) return toast('打开项目文件夹需要支持文件系统访问的浏览器，请使用 Chrome 或 Edge。');
+  let dir;
+  try { dir = await window.showDirectoryPicker(); } catch { return; } // 用户取消选择
+  toast('正在扫描文件夹…');
+  const scan = { project: [], models: [], scripts: [], byPath: new Map(), total: 0, unrecognized: 0, truncated: false };
+  const walk = async (handle, prefix) => {
+    for await (const entry of handle.values()) {
+      if (scan.total >= FOLDER_SCAN_LIMIT) { scan.truncated = true; return; }
+      if (entry.kind === 'directory') { await walk(entry, prefix ? `${prefix}/${entry.name}` : entry.name); if (scan.truncated) return; continue; }
+      scan.total++;
+      await classifyFolderFile(entry, prefix ? `${prefix}/${entry.name}` : entry.name, scan);
+    }
+  };
+  await walk(dir, '');
+  openFolderDialog(dir.name, scan);
+}
+async function classifyFolderFile(entry, path, scan) {
+  const lower = entry.name.toLowerCase();
+  const base = { name: entry.name, path, file: await entry.getFile() };
+  base.size = base.file.size;
+  if (lower.endsWith('.glb')) {
+    base.group = 'model'; base.loadable = base.size <= MODEL_SIZE_LIMIT;
+    scan.models.push(base);
+  } else if (lower.endsWith('.previzcam')) {
+    base.group = 'project'; base.loadable = base.size <= PROJECT_SIZE_LIMIT;
+    scan.project.push(base);
+  } else if (lower.endsWith('.json')) {
+    const kind = await classifyJsonFile(base.file);
+    if (kind === 'project') { base.group = 'project'; base.loadable = true; scan.project.push(base); }
+    else if (kind === 'script') { base.group = 'script'; base.loadable = base.size <= SCRIPT_SIZE_LIMIT; scan.scripts.push(base); }
+    else { scan.unrecognized++; return; }
+  } else { scan.unrecognized++; return; }
+  scan.byPath.set(path, base);
+}
+async function classifyJsonFile(file) {
+  try {
+    if (file.size <= SCRIPT_SIZE_LIMIT) {
+      const data = JSON.parse((await file.text()).replace(/^\uFEFF/, ''));
+      if (data?.type === 'previzcam.project') return 'project';
+      if (Array.isArray(data?.shots)) return 'script';
+      return null;
+    }
+    // 项目导出内嵌 base64 模型常超过剧本大小上限：只窥视开头确认类型标记。
+    const head = await file.slice(0, 4096).text();
+    return head.includes('"previzcam.project"') ? 'project' : null;
+  } catch { return null; }
+}
+function openFolderDialog(folderName, scan) {
+  const loadableCount = scan.project.filter(e => e.loadable).length + scan.models.filter(e => e.loadable).length + scan.scripts.filter(e => e.loadable).length;
+  const item = entry => `<label class="source-item"><input type="checkbox" data-folder-group="${entry.group}" data-folder-file="${esc(entry.path)}" ${entry.loadable === false ? 'disabled' : ''}><div><small>${esc(entry.path)} · ${fmtSize(entry.size)}${entry.loadable === false ? ' · 超过大小限制' : ''}</small><br><strong>${esc(entry.name)}</strong></div></label>`;
+  const group = (title, entries) => entries.length ? `<div class="source-group-title">${title}</div>${entries.map(item).join('')}` : '';
+  dialog('打开项目文件夹', `<p class="dialog-intro">文件夹「${esc(folderName)}」共扫描 ${scan.total} 个文件，可加载 ${loadableCount} 项${scan.unrecognized ? `，另有 ${scan.unrecognized} 个未识别文件已跳过` : ''}${scan.truncated ? '；文件数超过扫描上限，结果可能不完整' : ''}。</p><div class="source-list">${group('预演项目文件 · 整体还原一个完整项目', scan.project)}${group('GLB 模型 · 可与剧本同选', scan.models)}${group('剧本 JSON · 可与模型同选', scan.scripts)}</div><p class="field-help">项目文件与模型、剧本互斥；模型和剧本可以同时勾选。什么都不选直接关闭弹窗，不会创建项目。</p><div class="dialog-footer"><button id="confirm-folder-load" class="button-accent">加载选中项</button></div>`, 'PREVIZCAM / OPEN FOLDER');
+  on('confirm-folder-load', async () => {
+    const body = $('dialog-body');
+    const pick = group => { const el = body.querySelector(`[data-folder-group="${group}"]:checked`); return el ? scan.byPath.get(el.dataset.folderFile) : null; };
+    const projectEntry = pick('project'), modelEntry = pick('model'), scriptEntry = pick('script');
+    if (!projectEntry && !modelEntry && !scriptEntry) return toast('未选择要加载的内容；直接关闭弹窗不会创建项目。');
+    closeDialog();
+    if (projectEntry) return void await openProjectFile(projectEntry.file, folderName);
+    await newProject(folderName);
+    if (modelEntry) await loadModelFile(modelEntry.file); // 自带打开校准弹窗
+    if (scriptEntry) {
+      const data = JSON.parse((await scriptEntry.file.text()).replace(/^\uFEFF/, ''));
+      if (commit('导入剧本', p => p.script = data)) {
+        toast('剧本已载入，从素材段落中添加需要预演的镜头。');
+        if (!modelEntry) openShotPicker(); // 两个都勾时保留校准弹窗，校准完再选镜
+      }
+    }
+  });
+}
+// 弹窗内的勾选规则：组内单选；项目文件与模型/剧本互斥。dialog-body 是静态容器，
+// 监听器在 bindEvents 里只绑一次，状态完全由当前 DOM 推导；取消勾选同样重算禁用。
+function onFolderCheckChange(event) {
+  const box = event.target.closest('[data-folder-group]');
+  if (!box) return;
+  const body = $('dialog-body');
+  if (box.checked) for (const other of body.querySelectorAll(`[data-folder-group="${box.dataset.folderGroup}"]`)) if (other !== box) other.checked = false;
+  const projectChecked = body.querySelector('[data-folder-group="project"]:checked');
+  const contentChecked = body.querySelector('[data-folder-group="model"]:checked, [data-folder-group="script"]:checked');
+  for (const input of body.querySelectorAll('[data-folder-group]')) {
+    if (input.checked) continue;
+    input.disabled = projectChecked ? input.dataset.folderGroup !== 'project' : Boolean(contentChecked) && input.dataset.folderGroup === 'project';
+  }
 }
 async function showChecks() {
   dialog('镜头检查', '<p class="dialog-intro">正在采样轨迹并检查遮挡…</p>', 'REVIEW / GEOMETRY & STORY');
@@ -566,6 +659,7 @@ function bindEvents() {
   on('show-script', () => { const s = current()?.shot; if (!s) return; dialog(s.title, `<p class="dialog-intro"><span class="mono">${esc(s.id)}</span> · ${s.duration}s · ${esc(s.sceneId)}</p><p style="line-height:2">${esc(s.action)}</p><p class="notice">${s.motionPolicy === 'static' ? '剧本摄影约束：定镜头为主，保持机位、焦距与构图稳定。' : '本段未声明固定机位约束。'}</p><p class="field-help">这是剧本的纸面时长。占位走位由预演项目设置，尚未验证对白和动作能否在该时长内完成。</p>`); });
   on('dialog-close', closeDialog);
   $('dialog').addEventListener('cancel', e => { if (exporting) e.preventDefault(); });
+  on('dialog-body', onFolderCheckChange, 'change');
   for (const type of ['model', 'script', 'project']) on(`import-${type}`, () => { document.querySelector('.menu').open = false; $(`${type}-file`).click(); });
   on('model-file', async e => { pause(); const file = e.target.files[0]; e.target.value = ''; await loadModelFile(file); }, 'change');
   on('project-file', async e => { pause(); const file = e.target.files[0]; e.target.value = ''; await openProjectFile(file); }, 'change');
@@ -578,6 +672,7 @@ function bindEvents() {
   on('save-project', exportProject);
   bindGutters();
   on('new-project', async () => { document.querySelector('.menu').open = false; openNewProjectDialog(); });
+  on('open-folder', async () => { document.querySelector('.menu').open = false; await openProjectFolder(); });
   on('load-demo', loadDemoProject);
   on('welcome-new', () => { $('welcome').hidden = true; openNewProjectDialog(); });
   on('welcome-open', () => { $('project-file').click(); });
@@ -667,6 +762,12 @@ async function init() {
     spatialData: (value, options) => view.spatialData(value, options), toast,
     pause: () => { pause(); view.transform.detach(); view.pickAnchor = false; },
     assertReady: () => { if (!ready || view.dragging) refuse('WORKSPACE_BUSY', '场景尚未就绪或用户正在拖动编辑，请稍后重试。', { retryAfterMs: 2000 }); },
+    createEmpty: async (name, replace) => {
+      if (!name) refuse('INVALID_NAME', '项目名称不能为空。');
+      if (!isEmptyWorkspace(project) && !replace) refuse('PROJECT_EXISTS', `当前项目「${project.name}」已有内容，未被替换。请与用户确认后带 replace: true 重试。`);
+      await newProject(name);
+      return { name: project.name, revision: commands.revision };
+    },
   });
   bindEvents(); ready = true; refresh(); $('loading').hidden = true; $('save-state').textContent = '未打开项目';
   document.body.dataset.ready = 'true';

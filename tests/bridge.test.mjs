@@ -36,6 +36,17 @@ test('timeout cancels a browser request rather than replaying it', async t => {
   await assert.rejects(bridge.call('test-workspace', 'update_draft'), { code: 'REQUEST_TIMEOUT' });
   await new Promise(resolve => setTimeout(resolve, 20)); assert.deepEqual(messages.map(m => m.kind), ['request', 'cancelRequest']);
 });
+test('create_project relays verbatim and page-side PROJECT_EXISTS errors keep their code', async t => {
+  const bridge = await new BrowserBridge({ port: 0 }).start(); t.after(() => bridge.close());
+  const socket = await connect(bridge);
+  const got = once(socket, 'message'), request = bridge.call('test-workspace', 'create_project', { workspaceId: 'test-workspace', name: 'demo' });
+  const [bytes] = await got, message = JSON.parse(bytes);
+  assert.equal(message.method, 'create_project');
+  assert.equal(message.args.name, 'demo');
+  assert.equal('replace' in message.args, false, 'an omitted replace must stay absent on the wire');
+  socket.send(JSON.stringify({ kind: 'result', id: message.id, error: { code: 'PROJECT_EXISTS', message: '当前项目已有内容。', retryAfterMs: 2000 } }));
+  await assert.rejects(request, error => { assert.equal(error.code, 'PROJECT_EXISTS'); assert.equal(error.retryAfterMs, 2000); return true; });
+});
 test('artifacts are versioned packages with hashes; traversal and invalid batches produce no files', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'previzcam-artifacts-')), store = new ArtifactStore(directory);
   const input = { name: 'review.json', mimeType: 'application/json', data: Buffer.from('{"ok":true}').toString('base64') };

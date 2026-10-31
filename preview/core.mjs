@@ -71,6 +71,15 @@ export function createEmptyProject(name = '新建项目') {
   };
 }
 
+// True when the workspace holds nothing worth protecting: no shots, actors,
+// script content, imported model or placed anchors. Agent create_project
+// refuses to replace a non-empty workspace unless the caller passes replace.
+export function isEmptyWorkspace(project) {
+  return !project.shots.length && !project.actors.length
+    && !(project.script?.shots?.length) && !project.scene.anchors.length
+    && project.scene.source !== 'embedded';
+}
+
 // Turn a live capture into motion-camera keyframes: samples carry real
 // seconds; they are normalized to t in 0..1 and thinned to a small set.
 export function captureToKeyframes(samples, fps = 24) {

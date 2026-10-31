@@ -11,8 +11,8 @@ const FRAME_LIMIT = 12;
 const BUSY_WAIT = 15000;
 
 export class AgentWorkspace {
-  constructor({ commands, getProject, getBytes, spatialData, pause, toast, assertReady }) {
-    Object.assign(this, { commands, getProject, getBytes, spatialData, pause, toast, assertReady });
+  constructor({ commands, getProject, getBytes, spatialData, pause, toast, assertReady, createEmpty }) {
+    Object.assign(this, { commands, getProject, getBytes, spatialData, pause, toast, assertReady, createEmpty });
     this.jobs = new Map(); this.requests = new Map(); this.busy = null; this.review = null; this.enabled = false;
     // Which times the agent has actually rendered per draft version: the review gate
     // would otherwise be a guess, and the agent would guess back with sleeps.
@@ -184,6 +184,7 @@ export class AgentWorkspace {
     }
     if (method === 'get_draft') return this.commands.describe(args.draftId);
     await this.assertIdle(method);
+    if (method === 'create_project') return this.createEmpty(String(args.name ?? '').trim(), Boolean(args.replace));
     if (method === 'create_draft') return this.commands.create(args.label);
     if (method === 'update_draft') return this.commands.update(args.draftId, args.plan, args.expectedVersion);
     if (method === 'discard_draft') return this.commands.discard(args.draftId);

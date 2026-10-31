@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { createProject, createEmptyProject, validateProject, materialList, clone, sampleCamera, shotAt, applyCameraPlan, cameraPlan, sampledTimeline, policyWarnings, captureToKeyframes, requiredTimes, requiredFrames, missingTimes } from '../preview/core.mjs';
+import { createProject, createEmptyProject, isEmptyWorkspace, validateProject, materialList, clone, sampleCamera, shotAt, applyCameraPlan, cameraPlan, sampledTimeline, policyWarnings, captureToKeyframes, requiredTimes, requiredFrames, missingTimes } from '../preview/core.mjs';
 const script = JSON.parse(await readFile(new URL('../assets/script.json', import.meta.url), 'utf8'));
 const project = () => createProject(script);
 
@@ -31,6 +31,23 @@ test('empty project passes validation with one camera, no model and no script', 
   assert.equal(p.scene.source, 'bundled');
   validateProject(p);
   assert.equal(createEmptyProject('  ').name, '新建项目');
+});
+test('isEmptyWorkspace accepts a pristine workspace and rejects any real content', () => {
+  const fresh = () => createEmptyProject('x');
+  assert.equal(isEmptyWorkspace(fresh()), true, 'default camera only');
+  for (const change of [
+    p => p.shots.push({ id: 'S1' }),
+    p => p.actors.push({ id: 'A1' }),
+    p => p.script = { shots: [{ id: 'G1' }] },
+    p => p.scene.source = 'embedded',
+    p => p.scene.anchors.push({ id: 'anchor-1' }),
+  ]) {
+    const p = fresh(); change(p);
+    assert.equal(isEmptyWorkspace(p), false, `content guard: ${change.toString().slice(0, 40)}`);
+  }
+  // Script present but without shots still counts as empty; embedded model does not.
+  const bareScript = fresh(); bareScript.script = { title: '仅标题' };
+  assert.equal(isEmptyWorkspace(bareScript), true);
 });
 test('capture samples normalize to strictly increasing keyframes with real endpoints', () => {
   const samples = [

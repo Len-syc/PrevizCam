@@ -37,7 +37,7 @@ async function done(jobId) {
 const pass = message => console.log(`PASS ${message}`);
 try {
   await client.connect(transport); transport.stderr?.on('data', chunk => { serverLog += chunk.toString(); });
-  const tools = (await client.listTools()).tools; assert.equal(tools.length, 12); assert.ok(!tools.some(t => /apply|eval|shell/.test(t.name)));
+  const tools = (await client.listTools()).tools; assert.equal(tools.length, 13); assert.ok(!tools.some(t => /apply|eval|shell/.test(t.name)));
   browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu-sandbox'] });
   const browserContext = await browser.newContext({ viewport: { width: 1440, height: 960 }, acceptDownloads: true });
   page = await browserContext.newPage(); page.on('pageerror', error => errors.push(error.message)); page.setDefaultTimeout(15000);
@@ -52,6 +52,9 @@ try {
   const list = await client.callTool({ name: 'list_workspaces', arguments: {} }); workspaceId = list.structuredContent.workspaces[0].workspaceId;
   const initial = await context(); assert.equal(initial.project.shots.length, 3);
   await tool('get_context', { workspaceId: 'wrong-workspace' }, 'WORKSPACE_NOT_FOUND');
+  // The demo project is open and non-empty: creating must refuse until the caller
+  // explicitly takes ownership with replace.
+  await tool('create_project', { name: 'demo' }, 'PROJECT_EXISTS');
   // Scene reads are a summary by default; meshes are paged and filtered on demand.
   const summary = (await context()).spatialContext;
   assert.equal(summary.meshes.detail, 'summary');
@@ -171,6 +174,18 @@ try {
     const disconnected = await done(disconnectJob.id); assert.equal(disconnected.status, 'failed'); assert.equal(disconnected.error.code, 'WORKSPACE_DISCONNECTED');
     pass('disconnect failure, durable completed package references, no browser exceptions');
   } else pass('durable completed package references and no browser exceptions (video skipped)');
+  // Everything else is verified by now, so the final successful creation can
+  // discard the demo project: replace:true takes ownership and the workspace
+  // name must follow into list_workspaces.
+  await wait(650);
+  const created = (await tool('create_project', { name: 'demo', replace: true })).data;
+  assert.equal(created.name, 'demo');
+  await wait(650);
+  const renamed = await client.callTool({ name: 'list_workspaces', arguments: {} });
+  assert.equal(renamed.structuredContent.workspaces[0].name, 'demo');
+  const emptyContext = await context(); assert.equal(emptyContext.project.name, 'demo'); assert.equal(emptyContext.project.shots.length, 0);
+  await tool('create_project', { name: '   ' }, 'INVALID_NAME'); // zod 放行，页面 trim 后拒绝
+  pass('create_project guards non-empty workspaces, replaces on request and renames the workspace');
   console.log(JSON.stringify({ artifacts: completed.artifacts, screenshots: [`${out}/review-desktop.png`, `${out}/review-mobile.png`] }, null, 2));
 } catch (error) {
   console.error(error, '\nSERVER:', serverLog, '\nBROWSER:', errors);
